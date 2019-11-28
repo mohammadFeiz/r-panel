@@ -10,8 +10,8 @@
     "type": "git",
     "url": "git+https://github.com/mohammadFeiz/r-panel.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["js","panel","menu","GUI controller"],
+  "author": "mohammad sharif feiz",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/mohammadFeiz/r-panel/issues"
