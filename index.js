@@ -51,19 +51,19 @@ var _ref = new _rActions.default(),
     eventHandler = _ref.eventHandler,
     getClient = _ref.getClient;
 
-var RSettingContext = (0, _react.createContext)();
+var RPanelContext = (0, _react.createContext)();
 
-var RSetting =
+var RPanel =
 /*#__PURE__*/
 function (_Component) {
-  _inherits(RSetting, _Component);
+  _inherits(RPanel, _Component);
 
-  function RSetting(props) {
+  function RPanel(props) {
     var _this;
 
-    _classCallCheck(this, RSetting);
+    _classCallCheck(this, RPanel);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(RSetting).call(this, props));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(RPanel).call(this, props));
     _this.touch = 'ontouchstart' in document.documentElement;
     var _this$props$opened = _this.props.opened,
         opened = _this$props$opened === void 0 ? false : _this$props$opened;
@@ -75,7 +75,7 @@ function (_Component) {
     return _this;
   }
 
-  _createClass(RSetting, [{
+  _createClass(RPanel, [{
     key: "close",
     value: function close() {
       this.setState({
@@ -227,20 +227,20 @@ function (_Component) {
         title: title,
         rowStyle: rowStyle
       };
-      return _react.default.createElement(RSettingContext.Provider, {
+      return _react.default.createElement(RPanelContext.Provider, {
         value: contextValue
       }, _react.default.createElement("div", {
-        className: 'r-setting',
+        className: 'r-panel',
         ref: this.dom,
         style: style
       }, backdrop && _react.default.createElement("div", {
-        className: "r-setting-backdrop",
+        className: "r-panel-backdrop",
         onClick: function onClick() {
           if (backdropClose) {
             _this2.close();
           }
         }
-      }), _react.default.createElement(RSettingHeader, null), _react.default.createElement(RSettingBody, null), _react.default.createElement(RSettingFooter, null)));
+      }), _react.default.createElement(RPanelHeader, null), _react.default.createElement(RPanelBody, null), _react.default.createElement(RPanelFooter, null)));
     }
   }], [{
     key: "getDerivedStateFromProps",
@@ -265,61 +265,61 @@ function (_Component) {
     }
   }]);
 
-  return RSetting;
+  return RPanel;
 }(_react.Component);
 
-exports.default = RSetting;
-RSetting.defaultProps = {
+exports.default = RPanel;
+RPanel.defaultProps = {
   items: [],
   buttons: [],
   width: '300px',
   alignX: 'center'
 };
 
-var RSettingBody =
+var RPanelBody =
 /*#__PURE__*/
 function (_Component2) {
-  _inherits(RSettingBody, _Component2);
+  _inherits(RPanelBody, _Component2);
 
-  function RSettingBody() {
-    _classCallCheck(this, RSettingBody);
+  function RPanelBody() {
+    _classCallCheck(this, RPanelBody);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(RSettingBody).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelBody).apply(this, arguments));
   }
 
-  _createClass(RSettingBody, [{
+  _createClass(RPanelBody, [{
     key: "render",
     value: function render() {
       var items = this.context.items;
       var Items = items.map(function (item, i) {
-        return _react.default.createElement(RSettingItem, {
+        return _react.default.createElement(RPanelItem, {
           item: item,
           key: i
         });
       });
       return _react.default.createElement("div", {
-        className: "r-setting-body"
+        className: "r-panel-body"
       }, Items);
     }
   }]);
 
-  return RSettingBody;
+  return RPanelBody;
 }(_react.Component);
 
-_defineProperty(RSettingBody, "contextType", RSettingContext);
+_defineProperty(RPanelBody, "contextType", RPanelContext);
 
-var RSettingItem =
+var RPanelItem =
 /*#__PURE__*/
 function (_Component3) {
-  _inherits(RSettingItem, _Component3);
+  _inherits(RPanelItem, _Component3);
 
-  function RSettingItem() {
-    _classCallCheck(this, RSettingItem);
+  function RPanelItem() {
+    _classCallCheck(this, RPanelItem);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(RSettingItem).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelItem).apply(this, arguments));
   }
 
-  _createClass(RSettingItem, [{
+  _createClass(RPanelItem, [{
     key: "render",
     value: function render() {
       var _this$props2 = this.props,
@@ -328,37 +328,37 @@ function (_Component3) {
           level = _this$props2$level === void 0 ? 0 : _this$props2$level;
       var _item$opened2 = item.opened,
           opened = _item$opened2 === void 0 ? true : _item$opened2;
-      return _react.default.createElement(_react.Fragment, null, item.group && _react.default.createElement(_react.Fragment, null, _react.default.createElement(RSettingGroup, {
+      return _react.default.createElement(_react.Fragment, null, item.group && _react.default.createElement(_react.Fragment, null, _react.default.createElement(RPanelGroup, {
         item: item,
         level: level
       }), opened && item.group.map(function (itm, i) {
-        return _react.default.createElement(RSettingItem, {
+        return _react.default.createElement(RPanelItem, {
           item: itm,
           level: level + 1,
           key: i
         });
-      })), !item.group && _react.default.createElement(RSettingControl, {
+      })), !item.group && _react.default.createElement(RPanelControl, {
         item: item,
         level: level
       }));
     }
   }]);
 
-  return RSettingItem;
+  return RPanelItem;
 }(_react.Component);
 
-var RSettingControl =
+var RPanelControl =
 /*#__PURE__*/
 function (_Component4) {
-  _inherits(RSettingControl, _Component4);
+  _inherits(RPanelControl, _Component4);
 
-  function RSettingControl() {
-    _classCallCheck(this, RSettingControl);
+  function RPanelControl() {
+    _classCallCheck(this, RPanelControl);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(RSettingControl).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelControl).apply(this, arguments));
   }
 
-  _createClass(RSettingControl, [{
+  _createClass(RPanelControl, [{
     key: "getStyle",
     value: function getStyle() {
       var _this$props3 = this.props,
@@ -383,56 +383,56 @@ function (_Component4) {
       var control;
 
       if (item.range && item.field1 && item.field2) {
-        control = _react.default.createElement(RSettingRangeSlider, {
+        control = _react.default.createElement(RPanelRangeSlider, {
           item: item,
           model: model
         });
       } else if (item.range) {
-        control = _react.default.createElement(RSettingSlider, {
+        control = _react.default.createElement(RPanelSlider, {
           item: item,
           value: value
         });
       } else if (item.buttons && item.buttons.length) {
-        control = _react.default.createElement(RSettingGroupButton, {
+        control = _react.default.createElement(RPanelGroupButton, {
           item: item,
           value: value
         });
       } else if (item.options && item.options.length) {
-        control = _react.default.createElement(RSettingSelect, {
+        control = _react.default.createElement(RPanelSelect, {
           item: item,
           value: value
         });
       } else if (typeof value === 'string') {
-        control = _react.default.createElement(RSettingTextbox, {
+        control = _react.default.createElement(RPanelTextbox, {
           item: item,
           value: value
         });
       } else if (typeof value === 'number') {
-        control = _react.default.createElement(RSettingNumberbox, {
+        control = _react.default.createElement(RPanelNumberbox, {
           item: item,
           value: value
         });
       } else if (typeof value === 'boolean') {
-        control = _react.default.createElement(RSettingCheckbox, {
+        control = _react.default.createElement(RPanelCheckbox, {
           item: item,
           value: value
         });
       } else if (item.info || item.warning || item.danger) {
-        control = _react.default.createElement(RSettingAlert, {
+        control = _react.default.createElement(RPanelAlert, {
           item: item
         });
       } else if (item.text && item.href) {
-        control = _react.default.createElement(RSettingLink, {
+        control = _react.default.createElement(RPanelLink, {
           item: item
         });
       } else if (item.text) {
-        control = _react.default.createElement(RSettingList, {
+        control = _react.default.createElement(RPanelList, {
           item: item
         });
       }
 
       return _react.default.createElement(_react.Fragment, null, _react.default.createElement("div", {
-        className: "r-setting-item",
+        className: "r-panel-item",
         style: this.getStyle(),
         onClick: function onClick() {
           if (item.callback) {
@@ -441,34 +441,34 @@ function (_Component4) {
         }
       }, iconClass && _react.default.createElement("div", {
         className: "icon ".concat(iconClass)
-      }), item.title && _react.default.createElement(RSettingItemTitle, {
+      }), item.title && _react.default.createElement(RPanelItemTitle, {
         item: item
       }), control), validationState && validationState.state === false && _react.default.createElement("div", {
-        className: "r-setting-item",
+        className: "r-panel-item",
         style: this.getStyle()
-      }, _react.default.createElement(RSettingAlert, {
+      }, _react.default.createElement(RPanelAlert, {
         item: validationState
       })));
     }
   }]);
 
-  return RSettingControl;
+  return RPanelControl;
 }(_react.Component);
 
-_defineProperty(RSettingControl, "contextType", RSettingContext);
+_defineProperty(RPanelControl, "contextType", RPanelContext);
 
-var RSettingGroup =
+var RPanelGroup =
 /*#__PURE__*/
 function (_Component5) {
-  _inherits(RSettingGroup, _Component5);
+  _inherits(RPanelGroup, _Component5);
 
-  function RSettingGroup() {
-    _classCallCheck(this, RSettingGroup);
+  function RPanelGroup() {
+    _classCallCheck(this, RPanelGroup);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(RSettingGroup).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelGroup).apply(this, arguments));
   }
 
-  _createClass(RSettingGroup, [{
+  _createClass(RPanelGroup, [{
     key: "getStyle",
     value: function getStyle() {
       var level = this.props.level;
@@ -486,7 +486,7 @@ function (_Component5) {
       if (!item.callback) {
         toggle(item);
       } else {
-        if ((0, _jquery.default)(e.target).hasClass('r-setting-collapse')) {
+        if ((0, _jquery.default)(e.target).hasClass('r-panel-collapse')) {
           toggle(item);
         } else {
           item.callback(item);
@@ -501,114 +501,114 @@ function (_Component5) {
           opened = _item$opened3 === void 0 ? true : _item$opened3,
           iconClass = item.iconClass;
       return _react.default.createElement("div", {
-        className: "r-setting-item r-setting-group",
+        className: "r-panel-item r-panel-group",
         style: this.getStyle(),
         onClick: this.click.bind(this)
       }, _react.default.createElement("div", {
-        className: "r-setting-collapse ".concat(opened ? 'opened' : 'closed')
+        className: "r-panel-collapse ".concat(opened ? 'opened' : 'closed')
       }), iconClass && _react.default.createElement("div", {
         className: "icon ".concat(iconClass)
       }), _react.default.createElement("div", {
-        className: "r-setting-group-name"
+        className: "r-panel-group-name"
       }, item.title));
     }
   }]);
 
-  return RSettingGroup;
+  return RPanelGroup;
 }(_react.Component);
 
-_defineProperty(RSettingGroup, "contextType", RSettingContext);
+_defineProperty(RPanelGroup, "contextType", RPanelContext);
 
-var RSettingItemTitle =
+var RPanelItemTitle =
 /*#__PURE__*/
 function (_Component6) {
-  _inherits(RSettingItemTitle, _Component6);
+  _inherits(RPanelItemTitle, _Component6);
 
-  function RSettingItemTitle() {
-    _classCallCheck(this, RSettingItemTitle);
+  function RPanelItemTitle() {
+    _classCallCheck(this, RPanelItemTitle);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(RSettingItemTitle).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelItemTitle).apply(this, arguments));
   }
 
-  _createClass(RSettingItemTitle, [{
+  _createClass(RPanelItemTitle, [{
     key: "render",
     value: function render() {
       var item = this.props.item;
       return _react.default.createElement("div", {
-        className: "r-setting-item-title"
+        className: "r-panel-item-title"
       }, item.title || item.field);
     }
   }]);
 
-  return RSettingItemTitle;
+  return RPanelItemTitle;
 }(_react.Component);
 
-_defineProperty(RSettingItemTitle, "contextType", RSettingContext);
+_defineProperty(RPanelItemTitle, "contextType", RPanelContext);
 
-var RSettingList =
+var RPanelList =
 /*#__PURE__*/
 function (_Component7) {
-  _inherits(RSettingList, _Component7);
+  _inherits(RPanelList, _Component7);
 
-  function RSettingList() {
-    _classCallCheck(this, RSettingList);
+  function RPanelList() {
+    _classCallCheck(this, RPanelList);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(RSettingList).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelList).apply(this, arguments));
   }
 
-  _createClass(RSettingList, [{
+  _createClass(RPanelList, [{
     key: "render",
     value: function render() {
       var item = this.props.item;
       var text = item.text;
       return _react.default.createElement("div", {
-        className: "r-setting-control r-setting-list"
+        className: "r-panel-control r-panel-list"
       }, text);
     }
   }]);
 
-  return RSettingList;
+  return RPanelList;
 }(_react.Component);
 
-var RSettingLink =
+var RPanelLink =
 /*#__PURE__*/
 function (_Component8) {
-  _inherits(RSettingLink, _Component8);
+  _inherits(RPanelLink, _Component8);
 
-  function RSettingLink() {
-    _classCallCheck(this, RSettingLink);
+  function RPanelLink() {
+    _classCallCheck(this, RPanelLink);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(RSettingLink).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelLink).apply(this, arguments));
   }
 
-  _createClass(RSettingLink, [{
+  _createClass(RPanelLink, [{
     key: "render",
     value: function render() {
       var item = this.props.item;
       var text = item.text,
           href = item.href;
       return _react.default.createElement("a", {
-        className: "r-setting-control r-setting-list",
+        className: "r-panel-control r-panel-list",
         href: href
       }, text);
     }
   }]);
 
-  return RSettingLink;
+  return RPanelLink;
 }(_react.Component);
 
-var RSettingSlider =
+var RPanelSlider =
 /*#__PURE__*/
 function (_Component9) {
-  _inherits(RSettingSlider, _Component9);
+  _inherits(RPanelSlider, _Component9);
 
-  function RSettingSlider() {
-    _classCallCheck(this, RSettingSlider);
+  function RPanelSlider() {
+    _classCallCheck(this, RPanelSlider);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(RSettingSlider).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelSlider).apply(this, arguments));
   }
 
-  _createClass(RSettingSlider, [{
+  _createClass(RPanelSlider, [{
     key: "render",
     value: function render() {
       var _this$props4 = this.props,
@@ -616,7 +616,7 @@ function (_Component9) {
           value = _this$props4.value;
       var _onchange = this.context.onchange;
       return _react.default.createElement(_rSlider.default, {
-        className: "r-setting-control r-setting-slider",
+        className: "r-panel-control r-panel-slider",
         points: [{
           value: value
         }],
@@ -636,23 +636,23 @@ function (_Component9) {
     }
   }]);
 
-  return RSettingSlider;
+  return RPanelSlider;
 }(_react.Component);
 
-_defineProperty(RSettingSlider, "contextType", RSettingContext);
+_defineProperty(RPanelSlider, "contextType", RPanelContext);
 
-var RSettingRangeSlider =
+var RPanelRangeSlider =
 /*#__PURE__*/
 function (_Component10) {
-  _inherits(RSettingRangeSlider, _Component10);
+  _inherits(RPanelRangeSlider, _Component10);
 
-  function RSettingRangeSlider() {
-    _classCallCheck(this, RSettingRangeSlider);
+  function RPanelRangeSlider() {
+    _classCallCheck(this, RPanelRangeSlider);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(RSettingRangeSlider).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelRangeSlider).apply(this, arguments));
   }
 
-  _createClass(RSettingRangeSlider, [{
+  _createClass(RPanelRangeSlider, [{
     key: "render",
     value: function render() {
       var _this$props5 = this.props,
@@ -662,7 +662,7 @@ function (_Component10) {
       var value1 = getValueByField(model, item.field1);
       var value2 = getValueByField(model, item.field2);
       return _react.default.createElement(_rSlider.default, {
-        className: "r-setting-control r-setting-slider r-setting-range-slider",
+        className: "r-panel-control r-panel-slider r-panel-range-slider",
         points: [{
           value: value1
         }, {
@@ -690,23 +690,23 @@ function (_Component10) {
     }
   }]);
 
-  return RSettingRangeSlider;
+  return RPanelRangeSlider;
 }(_react.Component);
 
-_defineProperty(RSettingRangeSlider, "contextType", RSettingContext);
+_defineProperty(RPanelRangeSlider, "contextType", RPanelContext);
 
-var RSettingGroupButton =
+var RPanelGroupButton =
 /*#__PURE__*/
 function (_Component11) {
-  _inherits(RSettingGroupButton, _Component11);
+  _inherits(RPanelGroupButton, _Component11);
 
-  function RSettingGroupButton() {
-    _classCallCheck(this, RSettingGroupButton);
+  function RPanelGroupButton() {
+    _classCallCheck(this, RPanelGroupButton);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(RSettingGroupButton).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelGroupButton).apply(this, arguments));
   }
 
-  _createClass(RSettingGroupButton, [{
+  _createClass(RPanelGroupButton, [{
     key: "render",
     value: function render() {
       var _this$props6 = this.props,
@@ -714,7 +714,7 @@ function (_Component11) {
           value = _this$props6.value;
       var onchange = this.context.onchange;
       return _react.default.createElement("div", {
-        className: "r-setting-control r-setting-group-button"
+        className: "r-panel-control r-panel-group-button"
       }, item.buttons.map(function (btn, i) {
         return _react.default.createElement("button", {
           key: i,
@@ -730,23 +730,23 @@ function (_Component11) {
     }
   }]);
 
-  return RSettingGroupButton;
+  return RPanelGroupButton;
 }(_react.Component);
 
-_defineProperty(RSettingGroupButton, "contextType", RSettingContext);
+_defineProperty(RPanelGroupButton, "contextType", RPanelContext);
 
-var RSettingSelect =
+var RPanelSelect =
 /*#__PURE__*/
 function (_Component12) {
-  _inherits(RSettingSelect, _Component12);
+  _inherits(RPanelSelect, _Component12);
 
-  function RSettingSelect() {
-    _classCallCheck(this, RSettingSelect);
+  function RPanelSelect() {
+    _classCallCheck(this, RPanelSelect);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(RSettingSelect).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelSelect).apply(this, arguments));
   }
 
-  _createClass(RSettingSelect, [{
+  _createClass(RPanelSelect, [{
     key: "render",
     value: function render() {
       var _this$props7 = this.props,
@@ -754,7 +754,7 @@ function (_Component12) {
           value = _this$props7.value;
       var onchange = this.context.onchange;
       return _react.default.createElement("select", {
-        className: "r-setting-control r-setting-select",
+        className: "r-panel-control r-panel-select",
         value: value,
         onChange: function onChange(e) {
           onchange({
@@ -771,23 +771,23 @@ function (_Component12) {
     }
   }]);
 
-  return RSettingSelect;
+  return RPanelSelect;
 }(_react.Component);
 
-_defineProperty(RSettingSelect, "contextType", RSettingContext);
+_defineProperty(RPanelSelect, "contextType", RPanelContext);
 
-var RSettingTextbox =
+var RPanelTextbox =
 /*#__PURE__*/
 function (_Component13) {
-  _inherits(RSettingTextbox, _Component13);
+  _inherits(RPanelTextbox, _Component13);
 
-  function RSettingTextbox() {
-    _classCallCheck(this, RSettingTextbox);
+  function RPanelTextbox() {
+    _classCallCheck(this, RPanelTextbox);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(RSettingTextbox).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelTextbox).apply(this, arguments));
   }
 
-  _createClass(RSettingTextbox, [{
+  _createClass(RPanelTextbox, [{
     key: "render",
     value: function render() {
       var _this$props8 = this.props,
@@ -813,7 +813,7 @@ function (_Component13) {
         disabled: item.disabled,
         maxLength: item.maxLength,
         type: "text",
-        className: "r-setting-control r-setting-textbox",
+        className: "r-panel-control r-panel-textbox",
         value: value,
         onChange: function onChange(e) {
           onchange({
@@ -825,23 +825,23 @@ function (_Component13) {
     }
   }]);
 
-  return RSettingTextbox;
+  return RPanelTextbox;
 }(_react.Component);
 
-_defineProperty(RSettingTextbox, "contextType", RSettingContext);
+_defineProperty(RPanelTextbox, "contextType", RPanelContext);
 
-var RSettingNumberbox =
+var RPanelNumberbox =
 /*#__PURE__*/
 function (_Component14) {
-  _inherits(RSettingNumberbox, _Component14);
+  _inherits(RPanelNumberbox, _Component14);
 
-  function RSettingNumberbox() {
-    _classCallCheck(this, RSettingNumberbox);
+  function RPanelNumberbox() {
+    _classCallCheck(this, RPanelNumberbox);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(RSettingNumberbox).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelNumberbox).apply(this, arguments));
   }
 
-  _createClass(RSettingNumberbox, [{
+  _createClass(RPanelNumberbox, [{
     key: "render",
     value: function render() {
       var _this$props9 = this.props,
@@ -850,7 +850,7 @@ function (_Component14) {
       var onchange = this.context.onchange;
       return _react.default.createElement("input", _extends({}, item, {
         type: "number",
-        className: "r-setting-control r-setting-textbox r-setting-numberbox",
+        className: "r-panel-control r-panel-textbox r-panel-numberbox",
         value: value,
         onChange: function onChange(e) {
           onchange({
@@ -862,23 +862,23 @@ function (_Component14) {
     }
   }]);
 
-  return RSettingNumberbox;
+  return RPanelNumberbox;
 }(_react.Component);
 
-_defineProperty(RSettingNumberbox, "contextType", RSettingContext);
+_defineProperty(RPanelNumberbox, "contextType", RPanelContext);
 
-var RSettingCheckbox =
+var RPanelCheckbox =
 /*#__PURE__*/
 function (_Component15) {
-  _inherits(RSettingCheckbox, _Component15);
+  _inherits(RPanelCheckbox, _Component15);
 
-  function RSettingCheckbox() {
-    _classCallCheck(this, RSettingCheckbox);
+  function RPanelCheckbox() {
+    _classCallCheck(this, RPanelCheckbox);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(RSettingCheckbox).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelCheckbox).apply(this, arguments));
   }
 
-  _createClass(RSettingCheckbox, [{
+  _createClass(RPanelCheckbox, [{
     key: "render",
     value: function render() {
       var _this$props10 = this.props,
@@ -886,7 +886,7 @@ function (_Component15) {
           value = _this$props10.value;
       var onchange = this.context.onchange;
       return _react.default.createElement("div", {
-        className: "r-setting-control r-setting-checkbox"
+        className: "r-panel-control r-panel-checkbox"
       }, _react.default.createElement("input", {
         type: "checkbox",
         checked: value === true,
@@ -900,23 +900,23 @@ function (_Component15) {
     }
   }]);
 
-  return RSettingCheckbox;
+  return RPanelCheckbox;
 }(_react.Component);
 
-_defineProperty(RSettingCheckbox, "contextType", RSettingContext);
+_defineProperty(RPanelCheckbox, "contextType", RPanelContext);
 
-var RSettingAlert =
+var RPanelAlert =
 /*#__PURE__*/
 function (_Component16) {
-  _inherits(RSettingAlert, _Component16);
+  _inherits(RPanelAlert, _Component16);
 
-  function RSettingAlert() {
-    _classCallCheck(this, RSettingAlert);
+  function RPanelAlert() {
+    _classCallCheck(this, RPanelAlert);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(RSettingAlert).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelAlert).apply(this, arguments));
   }
 
-  _createClass(RSettingAlert, [{
+  _createClass(RPanelAlert, [{
     key: "render",
     value: function render() {
       var item = this.props.item;
@@ -937,28 +937,28 @@ function (_Component16) {
       }
 
       return _react.default.createElement("div", {
-        className: "r-setting-control r-setting-alert ".concat(type)
+        className: "r-panel-control r-panel-alert ".concat(type)
       }, message);
     }
   }]);
 
-  return RSettingAlert;
+  return RPanelAlert;
 }(_react.Component);
 
-_defineProperty(RSettingAlert, "contextType", RSettingContext);
+_defineProperty(RPanelAlert, "contextType", RPanelContext);
 
-var RSettingHeader =
+var RPanelHeader =
 /*#__PURE__*/
 function (_Component17) {
-  _inherits(RSettingHeader, _Component17);
+  _inherits(RPanelHeader, _Component17);
 
-  function RSettingHeader() {
-    _classCallCheck(this, RSettingHeader);
+  function RPanelHeader() {
+    _classCallCheck(this, RPanelHeader);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(RSettingHeader).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelHeader).apply(this, arguments));
   }
 
-  _createClass(RSettingHeader, [{
+  _createClass(RPanelHeader, [{
     key: "render",
     value: function render() {
       var _this$context2 = this.context,
@@ -973,35 +973,35 @@ function (_Component17) {
       }
 
       var props = _defineProperty({
-        className: 'r-setting-header'
+        className: 'r-panel-header'
       }, touch ? 'onTouchStart' : 'onMouseDown', mousedown);
 
       return _react.default.createElement("div", props, _react.default.createElement("div", {
-        className: "r-setting-title"
+        className: "r-panel-title"
       }, title), _react.default.createElement("div", {
-        className: "r-setting-close",
+        className: "r-panel-close",
         onClick: close
       }));
     }
   }]);
 
-  return RSettingHeader;
+  return RPanelHeader;
 }(_react.Component);
 
-_defineProperty(RSettingHeader, "contextType", RSettingContext);
+_defineProperty(RPanelHeader, "contextType", RPanelContext);
 
-var RSettingFooter =
+var RPanelFooter =
 /*#__PURE__*/
 function (_Component18) {
-  _inherits(RSettingFooter, _Component18);
+  _inherits(RPanelFooter, _Component18);
 
-  function RSettingFooter() {
-    _classCallCheck(this, RSettingFooter);
+  function RPanelFooter() {
+    _classCallCheck(this, RPanelFooter);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(RSettingFooter).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelFooter).apply(this, arguments));
   }
 
-  _createClass(RSettingFooter, [{
+  _createClass(RPanelFooter, [{
     key: "render",
     value: function render() {
       var _this$context3 = this.context,
@@ -1021,7 +1021,7 @@ function (_Component18) {
       }
 
       return _react.default.createElement("div", {
-        className: "r-setting-footer"
+        className: "r-panel-footer"
       }, btns.map(function (btn, i) {
         return _react.default.createElement("button", {
           key: i,
@@ -1033,7 +1033,7 @@ function (_Component18) {
     }
   }]);
 
-  return RSettingFooter;
+  return RPanelFooter;
 }(_react.Component);
 
-_defineProperty(RSettingFooter, "contextType", RSettingContext);
+_defineProperty(RPanelFooter, "contextType", RPanelContext);

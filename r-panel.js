@@ -4,8 +4,8 @@ import Slider from '@mohamadfeiz/r-slider';
 import $ from 'jquery';
 import RActions from 'r-actions';
 var {getValueByField,setValueByField,eventHandler,getClient} = new RActions();
-const RSettingContext = createContext();
-export default class RSetting extends Component {
+const RPanelContext = createContext();
+export default class RPanel extends Component {
   constructor(props){
     super(props);
     this.touch = 'ontouchstart' in document.documentElement;
@@ -99,32 +99,32 @@ export default class RSetting extends Component {
       reset,buttons,items,model,title,rowStyle
     }
     return (
-      <RSettingContext.Provider value={contextValue}>
-        <div className={'r-setting'} ref={this.dom} style={style}>
-          {backdrop && <div className='r-setting-backdrop' onClick={()=>{if(backdropClose){this.close()}}}></div>}
-          <RSettingHeader />
-          <RSettingBody />
-          <RSettingFooter />
+      <RPanelContext.Provider value={contextValue}>
+        <div className={'r-panel'} ref={this.dom} style={style}>
+          {backdrop && <div className='r-panel-backdrop' onClick={()=>{if(backdropClose){this.close()}}}></div>}
+          <RPanelHeader />
+          <RPanelBody />
+          <RPanelFooter />
         </div>
-      </RSettingContext.Provider>
+      </RPanelContext.Provider>
     );
   }
 }
-RSetting.defaultProps = {items:[],buttons:[],width:'300px',alignX:'center'}
+RPanel.defaultProps = {items:[],buttons:[],width:'300px',alignX:'center'}
 
-class RSettingBody extends Component{
-  static contextType = RSettingContext;
+class RPanelBody extends Component{
+  static contextType = RPanelContext;
   render(){
     var {items} = this.context;
     var Items = items.map((item,i)=>{    
       return (
-        <RSettingItem item={item} key={i}/>
+        <RPanelItem item={item} key={i}/>
       )
     });
-    return (<div className='r-setting-body'>{Items}</div>);
+    return (<div className='r-panel-body'>{Items}</div>);
   }
 }
-class RSettingItem extends Component{
+class RPanelItem extends Component{
   render(){
     var {item,level = 0} = this.props;
     var {opened = true} = item;
@@ -133,21 +133,21 @@ class RSettingItem extends Component{
           {
             item.group && 
             <Fragment>
-              <RSettingGroup item={item} level={level}/>
+              <RPanelGroup item={item} level={level}/>
               { opened && 
                 item.group.map((itm,i)=>{
-                  return <RSettingItem item={itm} level={level+1} key={i}/>
+                  return <RPanelItem item={itm} level={level+1} key={i}/>
                 })
               }
               </Fragment>
           }
-          {!item.group && <RSettingControl item={item} level={level}/>}
+          {!item.group && <RPanelControl item={item} level={level}/>}
         </Fragment>
     );
   }
 }
-class RSettingControl extends Component{
-  static contextType = RSettingContext;
+class RPanelControl extends Component{
+  static contextType = RPanelContext;
   getStyle(){
     var {level,item} = this.props;
     var {rowStyle = {}} = this.context;
@@ -162,35 +162,35 @@ class RSettingControl extends Component{
     var value = getValueByField(model,item.field);
     var validationState = validate(item,value); 
     var control;
-    if(item.range && item.field1 && item.field2){control = <RSettingRangeSlider item={item} model={model}/>}
-    else if(item.range){control = <RSettingSlider item={item} value={value}/>}
-    else if(item.buttons && item.buttons.length){control= <RSettingGroupButton item={item} value={value}/>}
-    else if(item.options && item.options.length){control = <RSettingSelect item={item} value={value}/>}
-    else if(typeof value === 'string'){control = <RSettingTextbox item={item} value={value}/>}
-    else if(typeof value === 'number'){control = <RSettingNumberbox item={item} value={value}/>}
-    else if(typeof value === 'boolean'){control = <RSettingCheckbox item={item} value={value}/>}
-    else if(item.info || item.warning || item.danger){control = <RSettingAlert item={item} />}
-    else if(item.text && item.href){control = <RSettingLink item={item}/>}
-    else if(item.text){control = <RSettingList item={item}/>}
+    if(item.range && item.field1 && item.field2){control = <RPanelRangeSlider item={item} model={model}/>}
+    else if(item.range){control = <RPanelSlider item={item} value={value}/>}
+    else if(item.buttons && item.buttons.length){control= <RPanelGroupButton item={item} value={value}/>}
+    else if(item.options && item.options.length){control = <RPanelSelect item={item} value={value}/>}
+    else if(typeof value === 'string'){control = <RPanelTextbox item={item} value={value}/>}
+    else if(typeof value === 'number'){control = <RPanelNumberbox item={item} value={value}/>}
+    else if(typeof value === 'boolean'){control = <RPanelCheckbox item={item} value={value}/>}
+    else if(item.info || item.warning || item.danger){control = <RPanelAlert item={item} />}
+    else if(item.text && item.href){control = <RPanelLink item={item}/>}
+    else if(item.text){control = <RPanelList item={item}/>}
     return (
       <Fragment>
-        <div className='r-setting-item' style={this.getStyle()} onClick={()=>{if(item.callback){item.callback(item)}}}>
+        <div className='r-panel-item' style={this.getStyle()} onClick={()=>{if(item.callback){item.callback(item)}}}>
           {iconClass && <div className={`icon ${iconClass}`}></div>}
-          {item.title && <RSettingItemTitle item={item} />}
+          {item.title && <RPanelItemTitle item={item} />}
           {control}
         </div>
         {
           validationState && validationState.state === false &&
-          <div className='r-setting-item' style={this.getStyle()}>
-            <RSettingAlert item={validationState}/>
+          <div className='r-panel-item' style={this.getStyle()}>
+            <RPanelAlert item={validationState}/>
           </div>
         }
       </Fragment>
     );
   }
 }
-class RSettingGroup extends Component{
-  static contextType = RSettingContext;
+class RPanelGroup extends Component{
+  static contextType = RPanelContext;
   getStyle(){
     var {level} = this.props;
     var style = {paddingLeft:(level * 16)+'px'}
@@ -201,7 +201,7 @@ class RSettingGroup extends Component{
     var {item} = this.props;
     if(!item.callback){toggle(item)}
     else{
-      if($(e.target).hasClass('r-setting-collapse')){
+      if($(e.target).hasClass('r-panel-collapse')){
         toggle(item);
       }
       else{
@@ -214,40 +214,40 @@ class RSettingGroup extends Component{
     var {item} = this.props;
     var {opened = true,iconClass} = item;
     return (
-      <div className='r-setting-item r-setting-group' style={this.getStyle()} onClick={this.click.bind(this)}>
-        <div className={`r-setting-collapse ${opened?'opened':'closed'}`}></div>
+      <div className='r-panel-item r-panel-group' style={this.getStyle()} onClick={this.click.bind(this)}>
+        <div className={`r-panel-collapse ${opened?'opened':'closed'}`}></div>
         {iconClass && <div className={`icon ${iconClass}`}></div>}
-        <div className='r-setting-group-name'>{item.title}</div>
+        <div className='r-panel-group-name'>{item.title}</div>
       </div>
     );
   }
 }
 
-class RSettingItemTitle extends Component{ 
-  static contextType = RSettingContext;
+class RPanelItemTitle extends Component{ 
+  static contextType = RPanelContext;
   render(){
     const {item} = this.props;
-    return (<div className='r-setting-item-title'>{item.title || item.field}</div>);
+    return (<div className='r-panel-item-title'>{item.title || item.field}</div>);
   }
 }
-class RSettingList extends Component{
+class RPanelList extends Component{
   render(){
     const {item} = this.props;
     var {text} = item;
     return (
-      <div className='r-setting-control r-setting-list'>
+      <div className='r-panel-control r-panel-list'>
       {text}
       </div>
     );
   }
 }
 
-class RSettingLink extends Component{
+class RPanelLink extends Component{
   render(){
     const {item} = this.props;
     var {text,href} = item;
     return (
-      <a className='r-setting-control r-setting-list' href={href}>
+      <a className='r-panel-control r-panel-list' href={href}>
         {text}
       </a>
     );
@@ -255,14 +255,14 @@ class RSettingLink extends Component{
 }
 
 
-class RSettingSlider extends Component{
-  static contextType = RSettingContext;
+class RPanelSlider extends Component{
+  static contextType = RPanelContext;
   render(){
     const {item,value} = this.props;
     const {onchange} = this.context;
     return (
       <Slider 
-        className='r-setting-control r-setting-slider'
+        className='r-panel-control r-panel-slider'
         points={[{value}]}
         showValue='fix'
         start={item.range[0]} end={item.range[1]} step={item.step}  
@@ -273,8 +273,8 @@ class RSettingSlider extends Component{
   }
 }
 
-class RSettingRangeSlider extends Component{ 
-  static contextType = RSettingContext;
+class RPanelRangeSlider extends Component{ 
+  static contextType = RPanelContext;
   render(){
     const {item,model} = this.props;
     const {onchange} = this.context;
@@ -282,7 +282,7 @@ class RSettingRangeSlider extends Component{
     var value2 = getValueByField(model,item.field2);
     return (
       <Slider 
-        className='r-setting-control r-setting-slider r-setting-range-slider'
+        className='r-panel-control r-panel-slider r-panel-range-slider'
         points={[{value:value1},{value:value2}]}
         point_width={30} point_height={20} thickness={2}
         showValue='fix'
@@ -301,13 +301,13 @@ class RSettingRangeSlider extends Component{
   }
 }
 
-class RSettingGroupButton extends Component{
-  static contextType = RSettingContext;
+class RPanelGroupButton extends Component{
+  static contextType = RPanelContext;
   render(){
     const {item,value} = this.props;
     const {onchange}= this.context;
     return (
-      <div className="r-setting-control r-setting-group-button">
+      <div className="r-panel-control r-panel-group-button">
       {
         item.buttons.map((btn,i)=>{
           return (
@@ -326,14 +326,14 @@ class RSettingGroupButton extends Component{
   }
 }
 
-class RSettingSelect extends Component{
-  static contextType = RSettingContext;
+class RPanelSelect extends Component{
+  static contextType = RPanelContext;
   render(){
     const {item,value} = this.props;
     const {onchange}= this.context;
     return (
       <select 
-        className='r-setting-control r-setting-select'
+        className='r-panel-control r-panel-select'
         value={value}
         onChange={(e)=>{
           onchange({field:item.field,value:e.target.value});
@@ -349,8 +349,8 @@ class RSettingSelect extends Component{
   }
 }
 
-class RSettingTextbox extends Component{
-  static contextType = RSettingContext;
+class RPanelTextbox extends Component{
+  static contextType = RPanelContext;
   render(){
     const {item,value} = this.props;
     const {onchange}= this.context;
@@ -376,7 +376,7 @@ class RSettingTextbox extends Component{
           disabled={item.disabled}
           maxLength={item.maxLength}
           type='text' 
-          className='r-setting-control r-setting-textbox'
+          className='r-panel-control r-panel-textbox'
           value={value} 
           onChange={(e)=>{onchange({field:item.field,value:e.target.value});}} 
         />
@@ -388,8 +388,8 @@ class RSettingTextbox extends Component{
   }
 }
 
-class RSettingNumberbox extends Component{
-  static contextType = RSettingContext;
+class RPanelNumberbox extends Component{
+  static contextType = RPanelContext;
   render(){
     const {item,value} = this.props;
     const {onchange}= this.context;
@@ -397,7 +397,7 @@ class RSettingNumberbox extends Component{
       <input 
         {...item}
         type='number'
-        className='r-setting-control r-setting-textbox r-setting-numberbox'
+        className='r-panel-control r-panel-textbox r-panel-numberbox'
         value={value} 
         onChange={(e)=>{onchange({field:item.field,value:parseFloat(e.target.value)});}}
       />  
@@ -406,13 +406,13 @@ class RSettingNumberbox extends Component{
 }
 
 
-class RSettingCheckbox extends Component{
-  static contextType = RSettingContext;
+class RPanelCheckbox extends Component{
+  static contextType = RPanelContext;
   render(){
     const {item,value} = this.props;
     const {onchange}= this.context;
     return (
-      <div className='r-setting-control r-setting-checkbox'>
+      <div className='r-panel-control r-panel-checkbox'>
         <input 
           type='checkbox'
           checked={value === true} 
@@ -425,8 +425,8 @@ class RSettingCheckbox extends Component{
   }
 }
 
-class RSettingAlert extends Component{
-  static contextType = RSettingContext;
+class RPanelAlert extends Component{
+  static contextType = RPanelContext;
   render(){
     const {item} = this.props;
     var {info,warning,danger} = item;
@@ -435,37 +435,37 @@ class RSettingAlert extends Component{
     else if(warning){message = warning; type = 'warning';}
     else if(info){message = info; type = 'info';}
     return (
-      <div className={`r-setting-control r-setting-alert ${type}`}>
+      <div className={`r-panel-control r-panel-alert ${type}`}>
         {message}
       </div>
     )
   }
 }
 
-class RSettingHeader extends Component{
-  static contextType = RSettingContext;
+class RPanelHeader extends Component{
+  static contextType = RPanelContext;
   render(){
     const {title = null,close,mousedown,touch}= this.context;
     if(title === null){return '';}
-    var props = {className:'r-setting-header',[touch?'onTouchStart':'onMouseDown']:mousedown};
+    var props = {className:'r-panel-header',[touch?'onTouchStart':'onMouseDown']:mousedown};
     return (
       <div {...props}>
-          <div className='r-setting-title'>{title}</div>
-          <div className='r-setting-close' onClick={close}></div>
+          <div className='r-panel-title'>{title}</div>
+          <div className='r-panel-close' onClick={close}></div>
       </div>
     )
   }
 }
 
-class RSettingFooter extends Component{
-  static contextType = RSettingContext;
+class RPanelFooter extends Component{
+  static contextType = RPanelContext;
   render(){
     const {buttons = [],buttonClick,reset,resetCallback}= this.context;
     var resetBtn = reset === true?[{text:'reset',callback:resetCallback}]:[];
     var btns = resetBtn.concat(buttons);
     if(!btns.length){return '';}
     return (
-      <div className='r-setting-footer'>
+      <div className='r-panel-footer'>
         {btns.map((btn,i)=>{
           return <button key ={i} onClick={()=>{buttonClick(btn)}}>{btn.text}</button>
         })}
