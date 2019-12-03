@@ -250,6 +250,15 @@
   flex:1;
   z-index:10;
   font-size:100%;
+  position:relative;
+}
+.r-panel-body-container{
+  width:fit-content;
+  height:100%;
+  position: absolute;;
+  left:0;
+  top:0;
+  min-width:100%;
 }
 .r-panel-backdrop{
   position:fixed;
@@ -258,6 +267,7 @@
   left:0;
   top:0;
 }
+
 
 .r-panel-collapse{
   width:24px;

@@ -10,7 +10,7 @@ export default class RPanel extends Component {
     super(props);
     this.touch = 'ontouchstart' in document.documentElement;
     var {opened = false,model} = this.props;
-    this.state = {opened,model,prevModel:JSON.stringify(model)};
+    //this.state = {};
     this.dom = createRef();
     this.errors = [];
   }
@@ -29,7 +29,7 @@ export default class RPanel extends Component {
       var changed = false;
       if(JSON.stringify(props.model) !== state.prevModel){
         change.model = props.model;
-        change.prevModel = JSON.stringify(props.model);
+        change.prevModel = JSOn.stringify(props.model);
         change.initModel = props.model;
         changed = true;
       }
@@ -50,7 +50,7 @@ export default class RPanel extends Component {
     return null;
   }
   close(){
-    this.setState({opened:false,prevModel:undefined,initModel:undefined}); 
+    this.setState({opened:false,prevModel:undefined,initModel:undefined});
   }
   toggle(item){
       var {items} = this.props;
@@ -90,15 +90,15 @@ export default class RPanel extends Component {
     model = JSON.parse(JSON.stringify(model));
     if(Array.isArray(obj)){
       for(var i = 0; i < obj.length; i++){
-        setValueByField(model,obj[i].field,obj[i].value);  
+        setValueByField(model,obj[i].field,obj[i].value);
       }
     }
     else{
-      setValueByField(model,obj.field,obj.value); 
+      setValueByField(model,obj.field,obj.value);
     }
     if(onchange){onchange(model);}
-    else{this.setState({model});}  
-    
+    else{this.setState({model});}
+
   }
   validate(item,value){
     if(item.validation){
@@ -139,12 +139,18 @@ class RPanelBody extends Component{
   static contextType = RPanelContext;
   render(){
     var {items} = this.context;
-    var Items = items.map((item,i)=>{    
+    var Items = items.map((item,i)=>{
       return (
         <RPanelItem item={item} key={i}/>
       )
     });
-    return (<div className='r-panel-body'>{Items}</div>);
+    return (
+      <div className='r-panel-body'>
+        <div className='r-panel-body-container'>
+          {Items}
+        </div>
+      </div>
+    );
   }
 }
 class RPanelItem extends Component{
@@ -154,10 +160,10 @@ class RPanelItem extends Component{
     return (
       <Fragment>
           {
-            item.group && 
+            item.group &&
             <Fragment>
               <RPanelGroup item={item} level={level}/>
-              { opened && 
+              { opened &&
                 item.group.map((itm,i)=>{
                   return <RPanelItem item={itm} level={level+1} key={i}/>
                 })
@@ -183,7 +189,7 @@ class RPanelControl extends Component{
     var {item} = this.props;
     var {iconClass} = item;
     var value = getValueByField(model,item.field);
-    var validationState = validate(item,value); 
+    var validationState = validate(item,value);
     var control;
     if(item.range && item.field1 && item.field2){control = <RPanelRangeSlider item={item} model={model}/>}
     else if(item.range){control = <RPanelSlider item={item} value={value}/>}
@@ -216,7 +222,8 @@ class RPanelGroup extends Component{
   static contextType = RPanelContext;
   getStyle(){
     var {level} = this.props;
-    var style = {paddingLeft:(level * 16)+'px'}
+    var style = {}
+    style.paddingLeft = level?(level * 24)+'px':undefined;
     return style;
   }
   click(e){
@@ -230,7 +237,7 @@ class RPanelGroup extends Component{
       else{
         item.callback(item)
       }
-      
+
     }
   }
   render(){
@@ -246,7 +253,7 @@ class RPanelGroup extends Component{
   }
 }
 
-class RPanelItemTitle extends Component{ 
+class RPanelItemTitle extends Component{
   static contextType = RPanelContext;
   render(){
     const {item} = this.props;
@@ -284,11 +291,11 @@ class RPanelSlider extends Component{
     const {item,value} = this.props;
     const {onchange} = this.context;
     return (
-      <Slider 
+      <Slider
         className='r-panel-control r-panel-slider'
         points={[{value}]}
         showValue='fix'
-        start={item.range[0]} end={item.range[1]} step={item.step}  
+        start={item.range[0]} end={item.range[1]} step={item.step}
         min={item.min} max={item.max}
         onchange={(obj)=>{onchange({field:item.field,value:obj.points[0].value});}}
       />
@@ -296,7 +303,7 @@ class RPanelSlider extends Component{
   }
 }
 
-class RPanelRangeSlider extends Component{ 
+class RPanelRangeSlider extends Component{
   static contextType = RPanelContext;
   render(){
     const {item,model} = this.props;
@@ -304,12 +311,12 @@ class RPanelRangeSlider extends Component{
     var value1 = getValueByField(model,item.field1);
     var value2 = getValueByField(model,item.field2);
     return (
-      <Slider 
+      <Slider
         className='r-panel-control r-panel-slider r-panel-range-slider'
         points={[{value:value1},{value:value2}]}
         point_width={30} point_height={20} thickness={2}
         showValue='fix'
-        start={item.range[0]} end={item.range[1]} step={item.step}  
+        start={item.range[0]} end={item.range[1]} step={item.step}
         min={item.min} max={item.max}
         onchange={
           (obj)=>{
@@ -334,9 +341,9 @@ class RPanelGroupButton extends Component{
       {
         item.buttons.map((btn,i)=>{
           return (
-            <button 
-              key={i} 
-              className={value === btn.value?'active':undefined} 
+            <button
+              key={i}
+              className={value === btn.value?'active':undefined}
               onClick={()=>{onchange({field:item.field,value:btn.value});}}
             >
               {btn.text}
@@ -344,7 +351,7 @@ class RPanelGroupButton extends Component{
           )
         })
       }
-      </div>   
+      </div>
     );
   }
 }
@@ -355,7 +362,7 @@ class RPanelSelect extends Component{
     const {item,value} = this.props;
     const {onchange}= this.context;
     return (
-      <select 
+      <select
         className='r-panel-control r-panel-select'
         value={value}
         onChange={(e)=>{
@@ -395,13 +402,13 @@ class RPanelTextbox extends Component{
     return (
       <Fragment>
         <input
-          list={listId} 
+          list={listId}
           disabled={item.disabled}
           maxLength={item.maxLength}
-          type='text' 
+          type='text'
           className='r-panel-control r-panel-textbox'
-          value={value} 
-          onChange={(e)=>{onchange({field:item.field,value:e.target.value});}} 
+          value={value}
+          onChange={(e)=>{onchange({field:item.field,value:e.target.value});}}
         />
         {
           list && list
@@ -417,13 +424,13 @@ class RPanelNumberbox extends Component{
     const {item,value} = this.props;
     const {onchange}= this.context;
     return (
-      <input 
+      <input
         {...item}
         type='number'
         className='r-panel-control r-panel-textbox r-panel-numberbox'
-        value={value} 
+        value={value}
         onChange={(e)=>{onchange({field:item.field,value:parseFloat(e.target.value)});}}
-      />  
+      />
     );
   }
 }
@@ -436,14 +443,14 @@ class RPanelCheckbox extends Component{
     const {onchange}= this.context;
     return (
       <div className='r-panel-control r-panel-checkbox'>
-        <input 
+        <input
           type='checkbox'
-          checked={value === true} 
+          checked={value === true}
           onChange={(e)=>{
             onchange({field:item.field,value:e.target.checked});
-          }}  
+          }}
         />
-      </div> 
+      </div>
     );
   }
 }

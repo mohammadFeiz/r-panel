@@ -68,12 +68,8 @@ function (_Component) {
     var _this$props = _this.props,
         _this$props$opened = _this$props.opened,
         opened = _this$props$opened === void 0 ? false : _this$props$opened,
-        model = _this$props.model;
-    _this.state = {
-      opened: opened,
-      model: model,
-      prevModel: JSON.stringify(model)
-    };
+        model = _this$props.model; //this.state = {};
+
     _this.dom = (0, _react.createRef)();
     _this.errors = [];
     return _this;
@@ -264,7 +260,7 @@ function (_Component) {
 
         if (JSON.stringify(props.model) !== state.prevModel) {
           change.model = props.model;
-          change.prevModel = JSON.stringify(props.model);
+          change.prevModel = JSOn.stringify(props.model);
           change.initModel = props.model;
           changed = true;
         }
@@ -324,7 +320,9 @@ function (_Component2) {
       });
       return _react.default.createElement("div", {
         className: "r-panel-body"
-      }, Items);
+      }, _react.default.createElement("div", {
+        className: "r-panel-body-container"
+      }, Items));
     }
   }]);
 
@@ -497,9 +495,8 @@ function (_Component5) {
     key: "getStyle",
     value: function getStyle() {
       var level = this.props.level;
-      var style = {
-        paddingLeft: level * 16 + 'px'
-      };
+      var style = {};
+      style.paddingLeft = level ? level * 24 + 'px' : undefined;
       return style;
     }
   }, {
