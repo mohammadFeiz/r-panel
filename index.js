@@ -65,10 +65,14 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(RPanel).call(this, props));
     _this.touch = 'ontouchstart' in document.documentElement;
-    var _this$props$opened = _this.props.opened,
-        opened = _this$props$opened === void 0 ? false : _this$props$opened;
+    var _this$props = _this.props,
+        _this$props$opened = _this$props.opened,
+        opened = _this$props$opened === void 0 ? false : _this$props$opened,
+        model = _this$props.model;
     _this.state = {
-      opened: opened
+      opened: opened,
+      model: model,
+      prevModel: JSON.stringify(model)
     };
     _this.dom = (0, _react.createRef)();
     _this.errors = [];
@@ -201,16 +205,16 @@ function (_Component) {
         return '';
       }
 
-      var _this$props = this.props,
-          backdrop = _this$props.backdrop,
-          items = _this$props.items,
-          _this$props$title = _this$props.title,
-          title = _this$props$title === void 0 ? '' : _this$props$title,
-          buttons = _this$props.buttons,
-          reset = _this$props.reset,
-          style = _this$props.style,
-          backdropClose = _this$props.backdropClose,
-          rowStyle = _this$props.rowStyle;
+      var _this$props2 = this.props,
+          backdrop = _this$props2.backdrop,
+          items = _this$props2.items,
+          _this$props2$title = _this$props2.title,
+          title = _this$props2$title === void 0 ? '' : _this$props2$title,
+          buttons = _this$props2.buttons,
+          reset = _this$props2.reset,
+          style = _this$props2.style,
+          backdropClose = _this$props2.backdropClose,
+          rowStyle = _this$props2.rowStyle;
       var contextValue = {
         close: this.close.bind(this),
         toggle: this.toggle.bind(this),
@@ -240,25 +244,46 @@ function (_Component) {
             _this2.close();
           }
         }
-      }), _react.default.createElement(RPanelHeader, null), _react.default.createElement(RPanelBody, null), _react.default.createElement(RPanelFooter, null)));
+      }), title && _react.default.createElement(RPanelHeader, null), _react.default.createElement(RPanelBody, null), _react.default.createElement(RPanelFooter, null)));
     }
   }], [{
     key: "getDerivedStateFromProps",
     value: function getDerivedStateFromProps(props, state) {
-      //در این کامپوننت مدل پروپس فقط از بیرون می تواند تغییر کند
-      if (JSON.stringify(props.model) !== state.prevModel) {
-        // اگر مدل پروپس از بیرون ارسال شد
+      if (state === null) {
+        //اولین فراخوانی
         return {
           model: props.model,
           prevModel: JSON.stringify(props.model),
-          initModel: state.initModel || props.model
+          initModel: props.model,
+          opened: props.opened,
+          prevOpened: props.opened
         };
-      }
+      } else {
+        var change = {};
+        var changed = false;
 
-      if (props.opened !== state.opened) {
-        return {
-          opened: props.opened
-        };
+        if (JSON.stringify(props.model) !== state.prevModel) {
+          change.model = props.model;
+          change.prevModel = JSON.stringify(props.model);
+          change.initModel = props.model;
+          changed = true;
+        }
+
+        if (state.opened !== state.prevOpened) {
+          //اگر تغییر باز بودن از داخل آمد
+          change.opened = state.opened;
+          change.prevOpened = state.opened;
+          changed = true;
+        } else if (props.opened !== state.prevModel) {
+          //اگر تغییر باز بودن از خارج آمد
+          change.opened = props.opened;
+          change.prevOpened = props.opened;
+          changed = true;
+        }
+
+        if (changed) {
+          return change;
+        }
       }
 
       return null;
@@ -322,10 +347,10 @@ function (_Component3) {
   _createClass(RPanelItem, [{
     key: "render",
     value: function render() {
-      var _this$props2 = this.props,
-          item = _this$props2.item,
-          _this$props2$level = _this$props2.level,
-          level = _this$props2$level === void 0 ? 0 : _this$props2$level;
+      var _this$props3 = this.props,
+          item = _this$props3.item,
+          _this$props3$level = _this$props3.level,
+          level = _this$props3$level === void 0 ? 0 : _this$props3$level;
       var _item$opened2 = item.opened,
           opened = _item$opened2 === void 0 ? true : _item$opened2;
       return _react.default.createElement(_react.Fragment, null, item.group && _react.default.createElement(_react.Fragment, null, _react.default.createElement(RPanelGroup, {
@@ -361,13 +386,13 @@ function (_Component4) {
   _createClass(RPanelControl, [{
     key: "getStyle",
     value: function getStyle() {
-      var _this$props3 = this.props,
-          level = _this$props3.level,
-          item = _this$props3.item;
+      var _this$props4 = this.props,
+          level = _this$props4.level,
+          item = _this$props4.item;
       var _this$context$rowStyl = this.context.rowStyle,
           rowStyle = _this$context$rowStyl === void 0 ? {} : _this$context$rowStyl;
       var style = rowStyle;
-      style.paddingLeft = level * 16 + (item.group ? 0 : 24) + 'px';
+      style.paddingLeft = level ? level * 24 + 'px' : undefined;
       return style;
     }
   }, {
@@ -611,9 +636,9 @@ function (_Component9) {
   _createClass(RPanelSlider, [{
     key: "render",
     value: function render() {
-      var _this$props4 = this.props,
-          item = _this$props4.item,
-          value = _this$props4.value;
+      var _this$props5 = this.props,
+          item = _this$props5.item,
+          value = _this$props5.value;
       var _onchange = this.context.onchange;
       return _react.default.createElement(_rSlider.default, {
         className: "r-panel-control r-panel-slider",
@@ -655,9 +680,9 @@ function (_Component10) {
   _createClass(RPanelRangeSlider, [{
     key: "render",
     value: function render() {
-      var _this$props5 = this.props,
-          item = _this$props5.item,
-          model = _this$props5.model;
+      var _this$props6 = this.props,
+          item = _this$props6.item,
+          model = _this$props6.model;
       var _onchange2 = this.context.onchange;
       var value1 = getValueByField(model, item.field1);
       var value2 = getValueByField(model, item.field2);
@@ -709,9 +734,9 @@ function (_Component11) {
   _createClass(RPanelGroupButton, [{
     key: "render",
     value: function render() {
-      var _this$props6 = this.props,
-          item = _this$props6.item,
-          value = _this$props6.value;
+      var _this$props7 = this.props,
+          item = _this$props7.item,
+          value = _this$props7.value;
       var onchange = this.context.onchange;
       return _react.default.createElement("div", {
         className: "r-panel-control r-panel-group-button"
@@ -749,9 +774,9 @@ function (_Component12) {
   _createClass(RPanelSelect, [{
     key: "render",
     value: function render() {
-      var _this$props7 = this.props,
-          item = _this$props7.item,
-          value = _this$props7.value;
+      var _this$props8 = this.props,
+          item = _this$props8.item,
+          value = _this$props8.value;
       var onchange = this.context.onchange;
       return _react.default.createElement("select", {
         className: "r-panel-control r-panel-select",
@@ -790,9 +815,9 @@ function (_Component13) {
   _createClass(RPanelTextbox, [{
     key: "render",
     value: function render() {
-      var _this$props8 = this.props,
-          item = _this$props8.item,
-          value = _this$props8.value;
+      var _this$props9 = this.props,
+          item = _this$props9.item,
+          value = _this$props9.value;
       var onchange = this.context.onchange;
       var list, listId;
 
@@ -844,9 +869,9 @@ function (_Component14) {
   _createClass(RPanelNumberbox, [{
     key: "render",
     value: function render() {
-      var _this$props9 = this.props,
-          item = _this$props9.item,
-          value = _this$props9.value;
+      var _this$props10 = this.props,
+          item = _this$props10.item,
+          value = _this$props10.value;
       var onchange = this.context.onchange;
       return _react.default.createElement("input", _extends({}, item, {
         type: "number",
@@ -881,9 +906,9 @@ function (_Component15) {
   _createClass(RPanelCheckbox, [{
     key: "render",
     value: function render() {
-      var _this$props10 = this.props,
-          item = _this$props10.item,
-          value = _this$props10.value;
+      var _this$props11 = this.props,
+          item = _this$props11.item,
+          value = _this$props11.value;
       var onchange = this.context.onchange;
       return _react.default.createElement("div", {
         className: "r-panel-control r-panel-checkbox"

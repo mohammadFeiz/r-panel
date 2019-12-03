@@ -9,21 +9,44 @@ export default class RPanel extends Component {
   constructor(props){
     super(props);
     this.touch = 'ontouchstart' in document.documentElement;
-    var {opened = false} = this.props;
-    this.state = {opened};
+    var {opened = false,model} = this.props;
+    this.state = {opened,model,prevModel:JSON.stringify(model)};
     this.dom = createRef();
     this.errors = [];
   }
   static getDerivedStateFromProps(props,state){
-    //در این کامپوننت مدل پروپس فقط از بیرون می تواند تغییر کند
-    if(JSON.stringify(props.model) !== state.prevModel){ // اگر مدل پروپس از بیرون ارسال شد
+    if(state === null){//اولین فراخوانی
       return {
         model:props.model,
         prevModel:JSON.stringify(props.model),
-        initModel:state.initModel || props.model
-      }; 
+        initModel:props.model,
+        opened:props.opened,
+        prevOpened:props.opened
+      };
     }
-    if(props.opened !== state.opened){return {opened:props.opened}}
+    else{
+      var change = {};
+      var changed = false;
+      if(JSON.stringify(props.model) !== state.prevModel){
+        change.model = props.model;
+        change.prevModel = JSON.stringify(props.model);
+        change.initModel = props.model;
+        changed = true;
+      }
+      if(state.opened !== state.prevOpened){//اگر تغییر باز بودن از داخل آمد
+        change.opened = state.opened;
+        change.prevOpened = state.opened;
+        changed = true;
+      }
+      else if(props.opened !== state.prevModel){//اگر تغییر باز بودن از خارج آمد
+        change.opened = props.opened;
+        change.prevOpened = props.opened;
+        changed = true;
+      }
+      if(changed){
+        return change;
+      }
+    }
     return null;
   }
   close(){
@@ -102,7 +125,7 @@ export default class RPanel extends Component {
       <RPanelContext.Provider value={contextValue}>
         <div className={'r-panel'} ref={this.dom} style={style}>
           {backdrop && <div className='r-panel-backdrop' onClick={()=>{if(backdropClose){this.close()}}}></div>}
-          <RPanelHeader />
+          {title && <RPanelHeader />}
           <RPanelBody />
           <RPanelFooter />
         </div>
@@ -152,7 +175,7 @@ class RPanelControl extends Component{
     var {level,item} = this.props;
     var {rowStyle = {}} = this.context;
     var style = rowStyle;
-    style.paddingLeft = (level * 16 + (item.group?0:24))+'px';
+    style.paddingLeft = level?(level * 24)+'px':undefined;
     return style;
   }
   render(){

@@ -49,6 +49,8 @@
   padding:var(--jc-padding);
   box-sizing:border-box;
   font-size:100%;
+  width:fit-content;
+  min-width:100%;
 }
 
 .r-panel-item-title{
@@ -256,7 +258,6 @@
   left:0;
   top:0;
 }
-
 
 .r-panel-collapse{
   width:24px;
