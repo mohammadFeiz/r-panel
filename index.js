@@ -260,7 +260,7 @@ function (_Component) {
 
         if (JSON.stringify(props.model) !== state.prevModel) {
           change.model = props.model;
-          change.prevModel = JSOn.stringify(props.model);
+          change.prevModel = JSON.stringify(props.model);
           change.initModel = props.model;
           changed = true;
         }

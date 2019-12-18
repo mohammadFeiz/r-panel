@@ -29,7 +29,7 @@ export default class RPanel extends Component {
       var changed = false;
       if(JSON.stringify(props.model) !== state.prevModel){
         change.model = props.model;
-        change.prevModel = JSOn.stringify(props.model);
+        change.prevModel = JSON.stringify(props.model);
         change.initModel = props.model;
         changed = true;
       }
