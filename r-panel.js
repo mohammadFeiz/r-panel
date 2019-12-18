@@ -1,6 +1,6 @@
 import React, { Component,createRef,Fragment,createContext } from 'react';
 import './index.css';
-import Slider from '@mohamadfeiz/r-slider';
+import Slider from 'r-range-slider';
 import $ from 'jquery';
 import RActions from 'r-actions';
 var {getValueByField,setValueByField,eventHandler,getClient} = new RActions();

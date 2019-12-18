@@ -9,7 +9,7 @@ var _react = _interopRequireWildcard(require("react"));
 
 require("./index.css");
 
-var _rSlider = _interopRequireDefault(require("@mohamadfeiz/r-slider"));
+var _rSlider = _interopRequireDefault(require("r-range-slider"));
 
 var _jquery = _interopRequireDefault(require("jquery"));
 
