@@ -15,6 +15,8 @@ var _jquery = _interopRequireDefault(require("jquery"));
 
 var _rActions = _interopRequireDefault(require("r-actions"));
 
+var _reactColor = require("react-color");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
@@ -394,6 +396,12 @@ function (_Component4) {
       return style;
     }
   }, {
+    key: "isColor",
+    value: function isColor(value) {
+      var a = value.indexOf('#') !== -1 || value.indexOf('rgb(') !== -1 || value.indexOf('rgba(') !== -1;
+      return a;
+    }
+  }, {
     key: "render",
     value: function render() {
       var _this$context = this.context,
@@ -422,6 +430,11 @@ function (_Component4) {
         });
       } else if (item.options && item.options.length) {
         control = _react.default.createElement(RPanelSelect, {
+          item: item,
+          value: value
+        });
+      } else if (typeof value === 'string' && this.isColor(value)) {
+        control = _react.default.createElement(RPanelColor, {
           item: item,
           value: value
         });
@@ -663,10 +676,54 @@ function (_Component9) {
 
 _defineProperty(RPanelSlider, "contextType", RPanelContext);
 
-var RPanelRangeSlider =
+var RPanelColor =
 /*#__PURE__*/
 function (_Component10) {
-  _inherits(RPanelRangeSlider, _Component10);
+  _inherits(RPanelColor, _Component10);
+
+  function RPanelColor(props) {
+    var _this3;
+
+    _classCallCheck(this, RPanelColor);
+
+    _this3 = _possibleConstructorReturn(this, _getPrototypeOf(RPanelColor).call(this, props));
+    _this3.state = {
+      open: false
+    };
+    return _this3;
+  }
+
+  _createClass(RPanelColor, [{
+    key: "render",
+    value: function render() {
+      var _this$props6 = this.props,
+          item = _this$props6.item,
+          value = _this$props6.value;
+      var onchange = this.context.onchange;
+      var open = this.state.open;
+      return _react.default.createElement("input", {
+        className: "r-panel-control",
+        type: "color",
+        onChange: function onChange(e) {
+          onchange({
+            field: item.field,
+            value: e.target.value
+          });
+        },
+        value: value
+      });
+    }
+  }]);
+
+  return RPanelColor;
+}(_react.Component);
+
+_defineProperty(RPanelColor, "contextType", RPanelContext);
+
+var RPanelRangeSlider =
+/*#__PURE__*/
+function (_Component11) {
+  _inherits(RPanelRangeSlider, _Component11);
 
   function RPanelRangeSlider() {
     _classCallCheck(this, RPanelRangeSlider);
@@ -677,9 +734,9 @@ function (_Component10) {
   _createClass(RPanelRangeSlider, [{
     key: "render",
     value: function render() {
-      var _this$props6 = this.props,
-          item = _this$props6.item,
-          model = _this$props6.model;
+      var _this$props7 = this.props,
+          item = _this$props7.item,
+          model = _this$props7.model;
       var _onchange = this.context.onchange;
       var value1 = getValueByField(model, item.field1);
       var value2 = getValueByField(model, item.field2);
@@ -719,8 +776,8 @@ _defineProperty(RPanelRangeSlider, "contextType", RPanelContext);
 
 var RPanelGroupButton =
 /*#__PURE__*/
-function (_Component11) {
-  _inherits(RPanelGroupButton, _Component11);
+function (_Component12) {
+  _inherits(RPanelGroupButton, _Component12);
 
   function RPanelGroupButton() {
     _classCallCheck(this, RPanelGroupButton);
@@ -731,9 +788,9 @@ function (_Component11) {
   _createClass(RPanelGroupButton, [{
     key: "render",
     value: function render() {
-      var _this$props7 = this.props,
-          item = _this$props7.item,
-          value = _this$props7.value;
+      var _this$props8 = this.props,
+          item = _this$props8.item,
+          value = _this$props8.value;
       var onchange = this.context.onchange;
       return _react.default.createElement("div", {
         className: "r-panel-control r-panel-group-button"
@@ -759,8 +816,8 @@ _defineProperty(RPanelGroupButton, "contextType", RPanelContext);
 
 var RPanelSelect =
 /*#__PURE__*/
-function (_Component12) {
-  _inherits(RPanelSelect, _Component12);
+function (_Component13) {
+  _inherits(RPanelSelect, _Component13);
 
   function RPanelSelect() {
     _classCallCheck(this, RPanelSelect);
@@ -771,9 +828,9 @@ function (_Component12) {
   _createClass(RPanelSelect, [{
     key: "render",
     value: function render() {
-      var _this$props8 = this.props,
-          item = _this$props8.item,
-          value = _this$props8.value;
+      var _this$props9 = this.props,
+          item = _this$props9.item,
+          value = _this$props9.value;
       var onchange = this.context.onchange;
       return _react.default.createElement("select", {
         className: "r-panel-control r-panel-select",
@@ -800,8 +857,8 @@ _defineProperty(RPanelSelect, "contextType", RPanelContext);
 
 var RPanelTextbox =
 /*#__PURE__*/
-function (_Component13) {
-  _inherits(RPanelTextbox, _Component13);
+function (_Component14) {
+  _inherits(RPanelTextbox, _Component14);
 
   function RPanelTextbox() {
     _classCallCheck(this, RPanelTextbox);
@@ -812,9 +869,9 @@ function (_Component13) {
   _createClass(RPanelTextbox, [{
     key: "render",
     value: function render() {
-      var _this$props9 = this.props,
-          item = _this$props9.item,
-          value = _this$props9.value;
+      var _this$props10 = this.props,
+          item = _this$props10.item,
+          value = _this$props10.value;
       var onchange = this.context.onchange;
       var list, listId;
 
@@ -854,8 +911,8 @@ _defineProperty(RPanelTextbox, "contextType", RPanelContext);
 
 var RPanelNumberbox =
 /*#__PURE__*/
-function (_Component14) {
-  _inherits(RPanelNumberbox, _Component14);
+function (_Component15) {
+  _inherits(RPanelNumberbox, _Component15);
 
   function RPanelNumberbox() {
     _classCallCheck(this, RPanelNumberbox);
@@ -866,9 +923,9 @@ function (_Component14) {
   _createClass(RPanelNumberbox, [{
     key: "render",
     value: function render() {
-      var _this$props10 = this.props,
-          item = _this$props10.item,
-          value = _this$props10.value;
+      var _this$props11 = this.props,
+          item = _this$props11.item,
+          value = _this$props11.value;
       var onchange = this.context.onchange;
       return _react.default.createElement("input", _extends({}, item, {
         type: "number",
@@ -891,8 +948,8 @@ _defineProperty(RPanelNumberbox, "contextType", RPanelContext);
 
 var RPanelCheckbox =
 /*#__PURE__*/
-function (_Component15) {
-  _inherits(RPanelCheckbox, _Component15);
+function (_Component16) {
+  _inherits(RPanelCheckbox, _Component16);
 
   function RPanelCheckbox() {
     _classCallCheck(this, RPanelCheckbox);
@@ -903,9 +960,9 @@ function (_Component15) {
   _createClass(RPanelCheckbox, [{
     key: "render",
     value: function render() {
-      var _this$props11 = this.props,
-          item = _this$props11.item,
-          value = _this$props11.value;
+      var _this$props12 = this.props,
+          item = _this$props12.item,
+          value = _this$props12.value;
       var onchange = this.context.onchange;
       return _react.default.createElement("div", {
         className: "r-panel-control r-panel-checkbox"
@@ -929,8 +986,8 @@ _defineProperty(RPanelCheckbox, "contextType", RPanelContext);
 
 var RPanelAlert =
 /*#__PURE__*/
-function (_Component16) {
-  _inherits(RPanelAlert, _Component16);
+function (_Component17) {
+  _inherits(RPanelAlert, _Component17);
 
   function RPanelAlert() {
     _classCallCheck(this, RPanelAlert);
@@ -971,8 +1028,8 @@ _defineProperty(RPanelAlert, "contextType", RPanelContext);
 
 var RPanelHeader =
 /*#__PURE__*/
-function (_Component17) {
-  _inherits(RPanelHeader, _Component17);
+function (_Component18) {
+  _inherits(RPanelHeader, _Component18);
 
   function RPanelHeader() {
     _classCallCheck(this, RPanelHeader);
@@ -1014,8 +1071,8 @@ _defineProperty(RPanelHeader, "contextType", RPanelContext);
 
 var RPanelFooter =
 /*#__PURE__*/
-function (_Component18) {
-  _inherits(RPanelFooter, _Component18);
+function (_Component19) {
+  _inherits(RPanelFooter, _Component19);
 
   function RPanelFooter() {
     _classCallCheck(this, RPanelFooter);

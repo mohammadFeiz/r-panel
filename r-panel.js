@@ -3,6 +3,7 @@ import './index.css';
 import Slider from 'r-range-slider';
 import $ from 'jquery';
 import RActions from 'r-actions';
+import { SketchPicker } from 'react-color';
 var {getValueByField,setValueByField,eventHandler,getClient} = new RActions();
 const RPanelContext = createContext();
 export default class RPanel extends Component {
@@ -184,6 +185,13 @@ class RPanelControl extends Component{
     style.paddingLeft = level?(level * 24)+'px':undefined;
     return style;
   }
+  isColor(value){
+    var a = 
+      value.indexOf('#') !== -1 ||
+      value.indexOf('rgb(') !== -1 ||
+      value.indexOf('rgba(') !== -1;
+      return a;
+  }
   render(){
     const {model,validate} = this.context;
     var {item} = this.props;
@@ -195,6 +203,9 @@ class RPanelControl extends Component{
     else if(item.range){control = <RPanelSlider item={item} value={value}/>}
     else if(item.buttons && item.buttons.length){control= <RPanelGroupButton item={item} value={value}/>}
     else if(item.options && item.options.length){control = <RPanelSelect item={item} value={value}/>}
+    else if(typeof value === 'string' && this.isColor(value)){
+      control = <RPanelColor item={item} value={value}/>
+    }
     else if(typeof value === 'string'){control = <RPanelTextbox item={item} value={value}/>}
     else if(typeof value === 'number'){control = <RPanelNumberbox item={item} value={value}/>}
     else if(typeof value === 'boolean'){control = <RPanelCheckbox item={item} value={value}/>}
@@ -252,7 +263,6 @@ class RPanelGroup extends Component{
     );
   }
 }
-
 class RPanelItemTitle extends Component{
   static contextType = RPanelContext;
   render(){
@@ -271,7 +281,6 @@ class RPanelList extends Component{
     );
   }
 }
-
 class RPanelLink extends Component{
   render(){
     const {item} = this.props;
@@ -283,8 +292,6 @@ class RPanelLink extends Component{
     );
   }
 }
-
-
 class RPanelSlider extends Component{
   static contextType = RPanelContext;
   render(){
@@ -299,6 +306,22 @@ class RPanelSlider extends Component{
         min={item.min} max={item.max}
         ondrag={(obj)=>{onchange({field:item.field,value:obj.points[0].value});}}
       />
+    )
+  }
+}
+class RPanelColor extends Component{
+  static contextType = RPanelContext;
+  constructor(props){
+    super(props);
+    this.state = {open:false}
+  }
+  render(){
+    const {item,value} = this.props;
+    const {onchange} = this.context;
+    const {open} = this.state;
+    return (
+      <input className='r-panel-control' type='color' onChange={(e)=>{onchange({field:item.field,value:e.target.value});}} value={value}/>
+
     )
   }
 }
