@@ -79,6 +79,11 @@
   height:var(--jc-item-height) !important;
   color:inherit;
 }
+
+.r-panel .r-slider{
+  padding:0 12px
+}
+
 .r-panel-slider-container{
   color:inherit;
 }
