@@ -9,7 +9,7 @@ var _react = _interopRequireWildcard(require("react"));
 
 require("./index.css");
 
-var _rSlider = _interopRequireDefault(require("r-range-slider"));
+var _rRangeSlider = _interopRequireDefault(require("r-range-slider"));
 
 var _jquery = _interopRequireDefault(require("jquery"));
 
@@ -68,8 +68,8 @@ function (_Component) {
     var _this$props = _this.props,
         _this$props$opened = _this$props.opened,
         opened = _this$props$opened === void 0 ? false : _this$props$opened,
-        model = _this$props.model; //this.state = {};
-
+        model = _this$props.model;
+    _this.state = {};
     _this.dom = (0, _react.createRef)();
     _this.errors = [];
     return _this;
@@ -636,8 +636,8 @@ function (_Component9) {
       var _this$props5 = this.props,
           item = _this$props5.item,
           value = _this$props5.value;
-      var _onchange = this.context.onchange;
-      return _react.default.createElement(_rSlider.default, {
+      var onchange = this.context.onchange;
+      return _react.default.createElement(_rRangeSlider.default, {
         className: "r-panel-control r-panel-slider",
         points: [{
           value: value
@@ -648,8 +648,8 @@ function (_Component9) {
         step: item.step,
         min: item.min,
         max: item.max,
-        onchange: function onchange(obj) {
-          _onchange({
+        ondrag: function ondrag(obj) {
+          onchange({
             field: item.field,
             value: obj.points[0].value
           });
@@ -680,10 +680,10 @@ function (_Component10) {
       var _this$props6 = this.props,
           item = _this$props6.item,
           model = _this$props6.model;
-      var _onchange2 = this.context.onchange;
+      var _onchange = this.context.onchange;
       var value1 = getValueByField(model, item.field1);
       var value2 = getValueByField(model, item.field2);
-      return _react.default.createElement(_rSlider.default, {
+      return _react.default.createElement(_rRangeSlider.default, {
         className: "r-panel-control r-panel-slider r-panel-range-slider",
         points: [{
           value: value1
@@ -700,7 +700,7 @@ function (_Component10) {
         min: item.min,
         max: item.max,
         onchange: function onchange(obj) {
-          _onchange2([{
+          _onchange([{
             field: item.field1,
             value: obj.points[0].value
           }, {
