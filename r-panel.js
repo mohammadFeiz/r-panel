@@ -10,7 +10,7 @@ export default class RPanel extends Component {
     super(props);
     this.touch = 'ontouchstart' in document.documentElement;
     var {opened = false,model} = this.props;
-    //this.state = {};
+    this.state = {};
     this.dom = createRef();
     this.errors = [];
   }
@@ -297,7 +297,7 @@ class RPanelSlider extends Component{
         showValue='fix'
         start={item.range[0]} end={item.range[1]} step={item.step}
         min={item.min} max={item.max}
-        onchange={(obj)=>{onchange({field:item.field,value:obj.points[0].value});}}
+        ondrag={(obj)=>{onchange({field:item.field,value:obj.points[0].value});}}
       />
     )
   }
