@@ -15,8 +15,6 @@ var _jquery = _interopRequireDefault(require("jquery"));
 
 var _rActions = _interopRequireDefault(require("r-actions"));
 
-var _reactColor = require("react-color");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
@@ -398,8 +396,21 @@ function (_Component4) {
   }, {
     key: "isColor",
     value: function isColor(value) {
-      var a = value.indexOf('#') !== -1 || value.indexOf('rgb(') !== -1 || value.indexOf('rgba(') !== -1;
-      return a;
+      if (value.indexOf('rgb(') !== -1) {
+        return true;
+      }
+
+      if (value.indexOf('rgba(') !== -1) {
+        return true;
+      }
+
+      if (value.indexOf('#') !== -1) {
+        if (value.length === 4 || value.length === 7) {
+          return true;
+        }
+      }
+
+      return false;
     }
   }, {
     key: "render",
@@ -408,8 +419,14 @@ function (_Component4) {
           model = _this$context.model,
           validate = _this$context.validate;
       var item = this.props.item;
-      var iconClass = item.iconClass;
+      var iconClass = item.iconClass,
+          getValue = item.getValue;
       var value = getValueByField(model, item.field);
+
+      if (getValue) {
+        value = getValue(value);
+      }
+
       var validationState = validate(item, value);
       var control;
 
@@ -664,7 +681,8 @@ function (_Component9) {
         ondrag: function ondrag(obj) {
           onchange({
             field: item.field,
-            value: obj.points[0].value
+            value: obj.points[0].value,
+            item: item
           });
         }
       });
@@ -702,12 +720,13 @@ function (_Component10) {
       var onchange = this.context.onchange;
       var open = this.state.open;
       return _react.default.createElement("input", {
-        className: "r-panel-control",
+        className: "r-panel-control r-panel-color",
         type: "color",
         onChange: function onChange(e) {
           onchange({
             field: item.field,
-            value: e.target.value
+            value: e.target.value,
+            item: item
           });
         },
         value: value
@@ -759,10 +778,12 @@ function (_Component11) {
         onchange: function onchange(obj) {
           _onchange([{
             field: item.field1,
-            value: obj.points[0].value
+            value: obj.points[0].value,
+            item: item
           }, {
             field: item.field2,
-            value: obj.points[1].value
+            value: obj.points[1].value,
+            item: item
           }]);
         }
       });
@@ -801,7 +822,8 @@ function (_Component12) {
           onClick: function onClick() {
             onchange({
               field: item.field,
-              value: btn.value
+              value: btn.value,
+              item: item
             });
           }
         }, btn.text);
@@ -838,7 +860,8 @@ function (_Component13) {
         onChange: function onChange(e) {
           onchange({
             field: item.field,
-            value: e.target.value
+            value: e.target.value,
+            item: item
           });
         }
       }, item.options.map(function (option, i) {
@@ -897,7 +920,8 @@ function (_Component14) {
         onChange: function onChange(e) {
           onchange({
             field: item.field,
-            value: e.target.value
+            value: e.target.value,
+            item: item
           });
         }
       }), list && list);
@@ -934,7 +958,8 @@ function (_Component15) {
         onChange: function onChange(e) {
           onchange({
             field: item.field,
-            value: parseFloat(e.target.value)
+            value: parseFloat(e.target.value),
+            item: item
           });
         }
       }));
@@ -972,7 +997,8 @@ function (_Component16) {
         onChange: function onChange(e) {
           onchange({
             field: item.field,
-            value: e.target.checked
+            value: e.target.checked,
+            item: item
           });
         }
       }));

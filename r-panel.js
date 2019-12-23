@@ -3,7 +3,6 @@ import './index.css';
 import Slider from 'r-range-slider';
 import $ from 'jquery';
 import RActions from 'r-actions';
-import { SketchPicker } from 'react-color';
 var {getValueByField,setValueByField,eventHandler,getClient} = new RActions();
 const RPanelContext = createContext();
 export default class RPanel extends Component {
@@ -186,17 +185,19 @@ class RPanelControl extends Component{
     return style;
   }
   isColor(value){
-    var a = 
-      value.indexOf('#') !== -1 ||
-      value.indexOf('rgb(') !== -1 ||
-      value.indexOf('rgba(') !== -1;
-      return a;
+    if(value.indexOf('rgb(') !== -1){return true;}
+    if(value.indexOf('rgba(') !== -1){return true;}
+    if(value.indexOf('#') !== -1){
+      if(value.length === 4 || value.length === 7){return true;}
+    }
+    return false;
   }
   render(){
     const {model,validate} = this.context;
     var {item} = this.props;
-    var {iconClass} = item;
+    var {iconClass,getValue} = item;
     var value = getValueByField(model,item.field);
+    if(getValue){value = getValue(value)}
     var validationState = validate(item,value);
     var control;
     if(item.range && item.field1 && item.field2){control = <RPanelRangeSlider item={item} model={model}/>}
@@ -304,7 +305,7 @@ class RPanelSlider extends Component{
         showValue='fix'
         start={item.range[0]} end={item.range[1]} step={item.step}
         min={item.min} max={item.max}
-        ondrag={(obj)=>{onchange({field:item.field,value:obj.points[0].value});}}
+        ondrag={(obj)=>{onchange({field:item.field,value:obj.points[0].value,item});}}
       />
     )
   }
@@ -320,7 +321,7 @@ class RPanelColor extends Component{
     const {onchange} = this.context;
     const {open} = this.state;
     return (
-      <input className='r-panel-control' type='color' onChange={(e)=>{onchange({field:item.field,value:e.target.value});}} value={value}/>
+      <input className='r-panel-control r-panel-color' type='color' onChange={(e)=>{onchange({field:item.field,value:e.target.value,item});}} value={value}/>
 
     )
   }
@@ -344,8 +345,8 @@ class RPanelRangeSlider extends Component{
         onchange={
           (obj)=>{
             onchange([
-              {field:item.field1,value:obj.points[0].value},
-              {field:item.field2,value:obj.points[1].value}
+              {field:item.field1,value:obj.points[0].value,item},
+              {field:item.field2,value:obj.points[1].value,item}
             ]);
           }
         }
@@ -367,7 +368,7 @@ class RPanelGroupButton extends Component{
             <button
               key={i}
               className={value === btn.value?'active':undefined}
-              onClick={()=>{onchange({field:item.field,value:btn.value});}}
+              onClick={()=>{onchange({field:item.field,value:btn.value,item});}}
             >
               {btn.text}
             </button>
@@ -389,7 +390,7 @@ class RPanelSelect extends Component{
         className='r-panel-control r-panel-select'
         value={value}
         onChange={(e)=>{
-          onchange({field:item.field,value:e.target.value});
+          onchange({field:item.field,value:e.target.value,item});
         }}
       >
       {
@@ -431,7 +432,7 @@ class RPanelTextbox extends Component{
           type='text'
           className='r-panel-control r-panel-textbox'
           value={value}
-          onChange={(e)=>{onchange({field:item.field,value:e.target.value});}}
+          onChange={(e)=>{onchange({field:item.field,value:e.target.value,item});}}
         />
         {
           list && list
@@ -452,7 +453,7 @@ class RPanelNumberbox extends Component{
         type='number'
         className='r-panel-control r-panel-textbox r-panel-numberbox'
         value={value}
-        onChange={(e)=>{onchange({field:item.field,value:parseFloat(e.target.value)});}}
+        onChange={(e)=>{onchange({field:item.field,value:parseFloat(e.target.value),item});}}
       />
     );
   }
@@ -470,7 +471,7 @@ class RPanelCheckbox extends Component{
           type='checkbox'
           checked={value === true}
           onChange={(e)=>{
-            onchange({field:item.field,value:e.target.checked});
+            onchange({field:item.field,value:e.target.checked,item});
           }}
         />
       </div>
