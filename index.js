@@ -7,27 +7,25 @@ exports.default = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
-require("./index.css");
-
 var _rRangeSlider = _interopRequireDefault(require("r-range-slider"));
+
+require("./index.css");
 
 var _jquery = _interopRequireDefault(require("jquery"));
 
-var _rActions = _interopRequireDefault(require("r-actions"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _instanceof(left, right) { if (right != null && typeof Symbol !== "undefined" && right[Symbol.hasInstance]) { return !!right[Symbol.hasInstance](left); } else { return left instanceof right; } }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!_instanceof(instance, Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -45,17 +43,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-var _ref = new _rActions.default(),
-    getValueByField = _ref.getValueByField,
-    setValueByField = _ref.setValueByField,
-    eventHandler = _ref.eventHandler,
-    getClient = _ref.getClient;
-
 var RPanelContext = (0, _react.createContext)();
 
-var RPanel =
-/*#__PURE__*/
-function (_Component) {
+var RPanel = /*#__PURE__*/function (_Component) {
   _inherits(RPanel, _Component);
 
   function RPanel(props) {
@@ -64,14 +54,9 @@ function (_Component) {
     _classCallCheck(this, RPanel);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(RPanel).call(this, props));
-    _this.touch = 'ontouchstart' in document.documentElement;
-    var _this$props = _this.props,
-        _this$props$opened = _this$props.opened,
-        opened = _this$props$opened === void 0 ? false : _this$props$opened,
-        model = _this$props.model;
     _this.state = {};
     _this.dom = (0, _react.createRef)();
-    _this.errors = [];
+    _this.touch = _this.isMobile();
     return _this;
   }
 
@@ -97,9 +82,9 @@ function (_Component) {
     }
   }, {
     key: "buttonClick",
-    value: function buttonClick(_ref2) {
-      var callback = _ref2.callback,
-          close = _ref2.close;
+    value: function buttonClick(_ref) {
+      var callback = _ref.callback,
+          close = _ref.close;
 
       if (callback) {
         callback(this.state.model);
@@ -124,6 +109,39 @@ function (_Component) {
       }
     }
   }, {
+    key: "isMobile",
+    value: function isMobile() {
+      return 'ontouchstart' in document.documentElement;
+    }
+  }, {
+    key: "eventHandler",
+    value: function eventHandler(selector, event, action) {
+      var type = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'bind';
+      var me = {
+        mousedown: "touchstart",
+        mousemove: "touchmove",
+        mouseup: "touchend"
+      };
+      event = this.touch ? me[event] : event;
+      var element = typeof selector === "string" ? selector === "window" ? (0, _jquery.default)(window) : (0, _jquery.default)(selector) : selector;
+      element.unbind(event, action);
+
+      if (type === 'bind') {
+        element.bind(event, action);
+      }
+    }
+  }, {
+    key: "getClient",
+    value: function getClient(e) {
+      return this.touch ? {
+        x: e.changedTouches[0].clientX,
+        y: e.changedTouches[0].clientY
+      } : {
+        x: e.clientX,
+        y: e.clientY
+      };
+    }
+  }, {
     key: "mousedown",
     value: function mousedown(e) {
       if (!this.props.movable) {
@@ -132,12 +150,12 @@ function (_Component) {
 
       var dom = (0, _jquery.default)(this.dom.current);
       this.startOffset = {
-        client: getClient(e),
+        client: this.getClient(e),
         offset: dom.offset(),
         dom: dom
       };
-      eventHandler('window', 'mousemove', _jquery.default.proxy(this.mousemove, this));
-      eventHandler('window', 'mouseup', _jquery.default.proxy(this.mouseup, this));
+      this.eventHandler('window', 'mousemove', _jquery.default.proxy(this.mousemove, this));
+      this.eventHandler('window', 'mouseup', _jquery.default.proxy(this.mouseup, this));
     }
   }, {
     key: "mousemove",
@@ -146,7 +164,7 @@ function (_Component) {
           dom = _this$startOffset.dom,
           client = _this$startOffset.client,
           offset = _this$startOffset.offset;
-      var CLIENT = getClient(e);
+      var CLIENT = this.getClient(e);
       dom.css({
         left: offset.left + (CLIENT.x - client.x),
         top: offset.top + (CLIENT.y - client.y)
@@ -155,8 +173,25 @@ function (_Component) {
   }, {
     key: "mouseup",
     value: function mouseup() {
-      eventHandler('window', 'mousemove', this.mousemove, 'unbind');
-      eventHandler('window', 'mouseup', this.mouseup, 'unbind');
+      this.eventHandler('window', 'mousemove', this.mousemove, 'unbind');
+      this.eventHandler('window', 'mouseup', this.mouseup, 'unbind');
+    }
+  }, {
+    key: "setValueByField",
+    value: function setValueByField(obj, field, value) {
+      var fields = field.split('.');
+      var node = obj;
+
+      for (var i = 0; i < fields.length - 1; i++) {
+        if (node[fields[i]] === undefined) {
+          return;
+        }
+
+        node = node[fields[i]];
+      }
+
+      node[fields[fields.length - 1]] = value;
+      return obj;
     }
   }, {
     key: "onchange",
@@ -167,10 +202,10 @@ function (_Component) {
 
       if (Array.isArray(obj)) {
         for (var i = 0; i < obj.length; i++) {
-          setValueByField(model, obj[i].field, obj[i].value);
+          this.setValueByField(model, obj[i].field, obj[i].value);
         }
       } else {
-        setValueByField(model, obj.field, obj.value);
+        this.setValueByField(model, obj.field, obj.value);
       }
 
       if (onchange) {
@@ -189,6 +224,11 @@ function (_Component) {
       }
     }
   }, {
+    key: "getValue",
+    value: function getValue(value) {
+      return typeof value === 'function' ? value(this.props) : value;
+    }
+  }, {
     key: "render",
     value: function render() {
       var _this2 = this;
@@ -201,16 +241,21 @@ function (_Component) {
         return '';
       }
 
-      var _this$props2 = this.props,
-          backdrop = _this$props2.backdrop,
-          items = _this$props2.items,
-          _this$props2$title = _this$props2.title,
-          title = _this$props2$title === void 0 ? '' : _this$props2$title,
-          buttons = _this$props2.buttons,
-          reset = _this$props2.reset,
-          style = _this$props2.style,
-          backdropClose = _this$props2.backdropClose,
-          rowStyle = _this$props2.rowStyle;
+      var _this$props = this.props,
+          backdrop = _this$props.backdrop,
+          items = _this$props.items,
+          _this$props$title = _this$props.title,
+          title = _this$props$title === void 0 ? '' : _this$props$title,
+          buttons = _this$props.buttons,
+          reset = _this$props.reset,
+          style = _this$props.style,
+          backdropClose = _this$props.backdropClose,
+          rowStyle = _this$props.rowStyle,
+          activeColor = _this$props.activeColor,
+          controlColor = _this$props.controlColor,
+          textColor = _this$props.textColor,
+          background = _this$props.background,
+          titleStyle = _this$props.titleStyle;
       var contextValue = {
         close: this.close.bind(this),
         toggle: this.toggle.bind(this),
@@ -219,20 +264,29 @@ function (_Component) {
         onchange: this.onchange.bind(this),
         validate: this.validate.bind(this),
         mousedown: this.mousedown.bind(this),
+        getValue: this.getValue.bind(this),
         touch: this.touch,
+        activeColor: activeColor,
+        controlColor: controlColor,
+        textColor: textColor,
+        background: background,
         reset: reset,
         buttons: buttons,
         items: items,
         model: model,
         title: title,
-        rowStyle: rowStyle
+        rowStyle: rowStyle,
+        titleStyle: titleStyle
       };
       return _react.default.createElement(RPanelContext.Provider, {
         value: contextValue
       }, _react.default.createElement("div", {
         className: 'r-panel',
         ref: this.dom,
-        style: style
+        style: _jquery.default.extend({}, {
+          color: textColor,
+          background: background
+        }, style)
       }, backdrop && _react.default.createElement("div", {
         className: "r-panel-backdrop",
         onClick: function onClick() {
@@ -240,7 +294,35 @@ function (_Component) {
             _this2.close();
           }
         }
-      }), title && _react.default.createElement(RPanelHeader, null), _react.default.createElement(RPanelBody, null), _react.default.createElement(RPanelFooter, null)));
+      }), title && title !== null && _react.default.createElement("div", _defineProperty({
+        className: 'r-panel-header'
+      }, this.touch ? 'onTouchStart' : 'onMouseDown', this.mousedown.bind(this)), _react.default.createElement("div", {
+        className: "r-panel-title"
+      }, title), _react.default.createElement("div", {
+        className: "r-panel-close",
+        onClick: this.close.bind(this)
+      })), _react.default.createElement("div", {
+        className: "r-panel-body"
+      }, _react.default.createElement("div", {
+        className: "r-panel-body-container"
+      }, items.map(function (item, i) {
+        return _react.default.createElement(RPanelItem, {
+          item: item,
+          key: i
+        });
+      }))), _react.default.createElement("div", {
+        className: "r-panel-footer"
+      }, (reset === true ? [{
+        text: 'reset',
+        callback: this.resetCallback.bind(this)
+      }] : []).concat(buttons).map(function (btn, i) {
+        return _react.default.createElement("button", {
+          key: i,
+          onClick: function onClick() {
+            _this2.buttonClick(btn);
+          }
+        }, btn.text);
+      }))));
     }
   }], [{
     key: "getDerivedStateFromProps",
@@ -294,47 +376,15 @@ RPanel.defaultProps = {
   items: [],
   buttons: [],
   width: '300px',
-  alignX: 'center'
+  alignX: 'center',
+  controlColor: 'rgb(87, 92, 102)',
+  activeColor: 'rgb(255, 102, 0)',
+  textColor: '#fff',
+  background: 'rgb(76, 82, 90)'
 };
 
-var RPanelBody =
-/*#__PURE__*/
-function (_Component2) {
-  _inherits(RPanelBody, _Component2);
-
-  function RPanelBody() {
-    _classCallCheck(this, RPanelBody);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelBody).apply(this, arguments));
-  }
-
-  _createClass(RPanelBody, [{
-    key: "render",
-    value: function render() {
-      var items = this.context.items;
-      var Items = items.map(function (item, i) {
-        return _react.default.createElement(RPanelItem, {
-          item: item,
-          key: i
-        });
-      });
-      return _react.default.createElement("div", {
-        className: "r-panel-body"
-      }, _react.default.createElement("div", {
-        className: "r-panel-body-container"
-      }, Items));
-    }
-  }]);
-
-  return RPanelBody;
-}(_react.Component);
-
-_defineProperty(RPanelBody, "contextType", RPanelContext);
-
-var RPanelItem =
-/*#__PURE__*/
-function (_Component3) {
-  _inherits(RPanelItem, _Component3);
+var RPanelItem = /*#__PURE__*/function (_Component2) {
+  _inherits(RPanelItem, _Component2);
 
   function RPanelItem() {
     _classCallCheck(this, RPanelItem);
@@ -345,10 +395,10 @@ function (_Component3) {
   _createClass(RPanelItem, [{
     key: "render",
     value: function render() {
-      var _this$props3 = this.props,
-          item = _this$props3.item,
-          _this$props3$level = _this$props3.level,
-          level = _this$props3$level === void 0 ? 0 : _this$props3$level;
+      var _this$props2 = this.props,
+          item = _this$props2.item,
+          _this$props2$level = _this$props2.level,
+          level = _this$props2$level === void 0 ? 0 : _this$props2$level;
       var _item$opened2 = item.opened,
           opened = _item$opened2 === void 0 ? true : _item$opened2;
       return _react.default.createElement(_react.Fragment, null, item.group && _react.default.createElement(_react.Fragment, null, _react.default.createElement(RPanelGroup, {
@@ -370,10 +420,8 @@ function (_Component3) {
   return RPanelItem;
 }(_react.Component);
 
-var RPanelControl =
-/*#__PURE__*/
-function (_Component4) {
-  _inherits(RPanelControl, _Component4);
+var RPanelControl = /*#__PURE__*/function (_Component3) {
+  _inherits(RPanelControl, _Component3);
 
   function RPanelControl() {
     _classCallCheck(this, RPanelControl);
@@ -384,13 +432,16 @@ function (_Component4) {
   _createClass(RPanelControl, [{
     key: "getStyle",
     value: function getStyle() {
-      var _this$props4 = this.props,
-          level = _this$props4.level,
-          item = _this$props4.item;
+      var _this$props3 = this.props,
+          level = _this$props3.level,
+          item = _this$props3.item;
       var _this$context$rowStyl = this.context.rowStyle,
           rowStyle = _this$context$rowStyl === void 0 ? {} : _this$context$rowStyl;
-      var style = rowStyle;
-      style.paddingLeft = level ? level * 24 + 'px' : undefined;
+
+      var style = _jquery.default.extend({}, {
+        paddingLeft: level ? level * 24 + 'px' : undefined
+      }, rowStyle);
+
       return style;
     }
   }, {
@@ -413,75 +464,234 @@ function (_Component4) {
       return false;
     }
   }, {
+    key: "getValueByField",
+    value: function getValueByField(obj, field) {
+      if (!field || field === null) {
+        return undefined;
+      }
+
+      var fieldString = typeof field === 'function' ? field(obj) : field;
+
+      if (!fieldString || typeof fieldString !== 'string') {
+        console.error('RGauger.getValueByField() receive invalid field');
+        return undefined;
+      }
+
+      var fields = fieldString.split('.');
+      var value = obj[fields[0]];
+
+      if (value === undefined) {
+        return;
+      }
+
+      for (var i = 1; i < fields.length; i++) {
+        value = value[fields[i]];
+
+        if (value === undefined || value === null) {
+          return;
+        }
+      }
+
+      return value;
+    }
+  }, {
     key: "render",
     value: function render() {
       var _this$context = this.context,
           model = _this$context.model,
-          validate = _this$context.validate;
+          validate = _this$context.validate,
+          textColor = _this$context.textColor,
+          getValue = _this$context.getValue,
+          activeColor = _this$context.activeColor,
+          controlColor = _this$context.controlColor,
+          onchange = _this$context.onchange;
       var item = this.props.item;
       var iconClass = item.iconClass,
-          getValue = item.getValue;
-      var value = getValueByField(model, item.field);
+          iconColor = item.iconColor;
+      var field = typeof item.field === 'function' ? item.field() : item.field;
+      var value = this.getValueByField(model, field);
 
-      if (getValue) {
-        value = getValue(value);
-      }
+      var type = _typeof(value);
 
       var validationState = validate(item, value);
       var control;
 
-      if (item.range && item.field1 && item.field2) {
-        control = _react.default.createElement(RPanelRangeSlider, {
-          item: item,
-          model: model
-        });
-      } else if (item.range) {
-        control = _react.default.createElement(RPanelSlider, {
-          item: item,
-          value: value
+      if (item.range) {
+        control = _react.default.createElement(_rRangeSlider.default, {
+          className: "r-panel-control r-panel-slider",
+          style: {
+            padding: '6px'
+          },
+          points: [{
+            value: value,
+            fillStyle: {
+              background: activeColor,
+              height: '3px'
+            }
+          }],
+          pointStyle: {
+            display: 'none'
+          },
+          showValue: "fixed",
+          valueStyle: {
+            top: '-10px',
+            height: '20px',
+            lineHeight: '20px',
+            background: controlColor,
+            minWidth: '20px',
+            textAlign: 'center'
+          },
+          lineStyle: {
+            background: controlColor,
+            height: '3px'
+          },
+          start: item.range[0],
+          end: item.range[1],
+          step: item.step,
+          min: item.min,
+          max: item.max,
+          ondrag: function ondrag(obj) {
+            onchange({
+              field: item.field,
+              value: obj.points[0].value,
+              item: item
+            });
+          }
         });
       } else if (item.buttons && item.buttons.length) {
-        control = _react.default.createElement(RPanelGroupButton, {
-          item: item,
-          value: value
-        });
+        control = _react.default.createElement("div", {
+          className: "r-panel-control r-panel-group-button"
+        }, item.buttons.map(function (btn, i) {
+          var active = value === btn.value;
+          return _react.default.createElement("button", {
+            style: {
+              background: controlColor,
+              borderColor: active ? activeColor : undefined,
+              color: active ? activeColor : undefined
+            },
+            key: i,
+            className: active ? 'active' : undefined,
+            onClick: function onClick() {
+              onchange({
+                field: item.field,
+                value: btn.value,
+                item: item
+              });
+            }
+          }, btn.text);
+        }));
       } else if (item.options && item.options.length) {
-        control = _react.default.createElement(RPanelSelect, {
-          item: item,
-          value: value
-        });
-      } else if (typeof value === 'string' && this.isColor(value)) {
-        control = _react.default.createElement(RPanelColor, {
-          item: item,
-          value: value
-        });
-      } else if (typeof value === 'string') {
-        control = _react.default.createElement(RPanelTextbox, {
-          item: item,
-          value: value
-        });
-      } else if (typeof value === 'number') {
-        control = _react.default.createElement(RPanelNumberbox, {
-          item: item,
-          value: value
-        });
-      } else if (typeof value === 'boolean') {
-        control = _react.default.createElement(RPanelCheckbox, {
-          item: item,
-          value: value
-        });
+        control = _react.default.createElement("select", {
+          className: "r-panel-control r-panel-select",
+          value: value,
+          style: {
+            background: controlColor
+          },
+          onChange: function onChange(e) {
+            onchange({
+              field: item.field,
+              value: e.target.value,
+              item: item
+            });
+          }
+        }, item.options.map(function (option, i) {
+          return _react.default.createElement("option", {
+            key: i,
+            value: option.value
+          }, option.text);
+        }));
+      } else if (type === 'string') {
+        if (this.isColor(value)) {
+          control = _react.default.createElement("input", {
+            className: "r-panel-control r-panel-color",
+            type: "color",
+            onChange: function onChange(e) {
+              onchange({
+                field: item.field,
+                value: e.target.value,
+                item: item
+              });
+            },
+            value: value,
+            style: {
+              background: controlColor
+            }
+          });
+        } else {
+          var listId = 'datalist' + Math.random();
+          var list = item.list ? _react.default.createElement("datalist", {
+            id: listId
+          }, item.list.map(function (l, i) {
+            return _react.default.createElement("option", {
+              value: l,
+              key: i
+            });
+          })) : undefined;
+          control = _react.default.createElement(_react.Fragment, null, _react.default.createElement("input", {
+            list: listId,
+            style: {
+              background: controlColor
+            },
+            disabled: item.disabled,
+            maxLength: item.maxLength,
+            type: "text",
+            className: "r-panel-control r-panel-textbox",
+            value: value,
+            onChange: function onChange(e) {
+              onchange({
+                field: item.field,
+                value: e.target.value,
+                item: item
+              });
+            }
+          }), list && list);
+        }
+      } else if (type === 'number') {
+        control = _react.default.createElement("input", _extends({}, item, {
+          style: {
+            background: controlColor
+          },
+          type: "number",
+          value: value,
+          className: "r-panel-control r-panel-textbox r-panel-numberbox",
+          onChange: function onChange(e) {
+            onchange({
+              field: item.field,
+              value: parseFloat(e.target.value),
+              item: item
+            });
+          }
+        }));
+      } else if (type === 'boolean') {
+        control = _react.default.createElement("div", {
+          className: "r-panel-control r-panel-checkbox"
+        }, _react.default.createElement("div", {
+          style: {
+            borderColor: textColor,
+            color: activeColor
+          },
+          className: "checkbox".concat(value === true ? ' checked' : ''),
+          onClick: function onClick() {
+            return onchange({
+              field: item.field,
+              value: !value,
+              item: item
+            });
+          }
+        }));
       } else if (item.info || item.warning || item.danger) {
         control = _react.default.createElement(RPanelAlert, {
           item: item
         });
       } else if (item.text && item.href) {
-        control = _react.default.createElement(RPanelLink, {
-          item: item
-        });
+        control = _react.default.createElement("a", {
+          className: "r-panel-control r-panel-list",
+          href: item.href
+        }, item.text);
       } else if (item.text) {
-        control = _react.default.createElement(RPanelList, {
-          item: item
-        });
+        control = _react.default.createElement("div", {
+          className: "r-panel-control r-panel-list"
+        }, getValue(item.text));
       }
 
       return _react.default.createElement(_react.Fragment, null, _react.default.createElement("div", {
@@ -492,10 +702,9 @@ function (_Component4) {
             item.callback(item);
           }
         }
-      }, iconClass && _react.default.createElement("div", {
-        className: "icon ".concat(iconClass)
-      }), item.title && _react.default.createElement(RPanelItemTitle, {
-        item: item
+      }, item.title && _react.default.createElement(RPanelItemTitle, {
+        title: getValue(item.title),
+        field: getValue(item.field)
       }), control), validationState && validationState.state === false && _react.default.createElement("div", {
         className: "r-panel-item",
         style: this.getStyle()
@@ -510,10 +719,8 @@ function (_Component4) {
 
 _defineProperty(RPanelControl, "contextType", RPanelContext);
 
-var RPanelGroup =
-/*#__PURE__*/
-function (_Component5) {
-  _inherits(RPanelGroup, _Component5);
+var RPanelGroup = /*#__PURE__*/function (_Component4) {
+  _inherits(RPanelGroup, _Component4);
 
   function RPanelGroup() {
     _classCallCheck(this, RPanelGroup);
@@ -525,8 +732,13 @@ function (_Component5) {
     key: "getStyle",
     value: function getStyle() {
       var level = this.props.level;
-      var style = {};
-      style.paddingLeft = level ? level * 24 + 'px' : undefined;
+      var _this$context$rowStyl2 = this.context.rowStyle,
+          rowStyle = _this$context$rowStyl2 === void 0 ? {} : _this$context$rowStyl2;
+
+      var style = _jquery.default.extend({}, {
+        paddingLeft: level ? level * 24 + 'px' : undefined
+      }, rowStyle);
+
       return style;
     }
   }, {
@@ -551,7 +763,8 @@ function (_Component5) {
       var item = this.props.item;
       var _item$opened3 = item.opened,
           opened = _item$opened3 === void 0 ? true : _item$opened3,
-          iconClass = item.iconClass;
+          iconClass = item.iconClass,
+          iconColor = item.iconColor;
       return _react.default.createElement("div", {
         className: "r-panel-item r-panel-group",
         style: this.getStyle(),
@@ -559,7 +772,10 @@ function (_Component5) {
       }, _react.default.createElement("div", {
         className: "r-panel-collapse ".concat(opened ? 'opened' : 'closed')
       }), iconClass && _react.default.createElement("div", {
-        className: "icon ".concat(iconClass)
+        className: "icon ".concat(iconClass),
+        style: {
+          color: iconColor
+        }
       }), _react.default.createElement("div", {
         className: "r-panel-group-name"
       }, item.title));
@@ -571,10 +787,8 @@ function (_Component5) {
 
 _defineProperty(RPanelGroup, "contextType", RPanelContext);
 
-var RPanelItemTitle =
-/*#__PURE__*/
-function (_Component6) {
-  _inherits(RPanelItemTitle, _Component6);
+var RPanelItemTitle = /*#__PURE__*/function (_Component5) {
+  _inherits(RPanelItemTitle, _Component5);
 
   function RPanelItemTitle() {
     _classCallCheck(this, RPanelItemTitle);
@@ -585,10 +799,14 @@ function (_Component6) {
   _createClass(RPanelItemTitle, [{
     key: "render",
     value: function render() {
-      var item = this.props.item;
+      var _this$props4 = this.props,
+          title = _this$props4.title,
+          field = _this$props4.field;
+      var titleStyle = this.context.titleStyle;
       return _react.default.createElement("div", {
+        style: titleStyle,
         className: "r-panel-item-title"
-      }, item.title || item.field);
+      }, title || field);
     }
   }]);
 
@@ -597,423 +815,8 @@ function (_Component6) {
 
 _defineProperty(RPanelItemTitle, "contextType", RPanelContext);
 
-var RPanelList =
-/*#__PURE__*/
-function (_Component7) {
-  _inherits(RPanelList, _Component7);
-
-  function RPanelList() {
-    _classCallCheck(this, RPanelList);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelList).apply(this, arguments));
-  }
-
-  _createClass(RPanelList, [{
-    key: "render",
-    value: function render() {
-      var item = this.props.item;
-      var text = item.text;
-      return _react.default.createElement("div", {
-        className: "r-panel-control r-panel-list"
-      }, text);
-    }
-  }]);
-
-  return RPanelList;
-}(_react.Component);
-
-var RPanelLink =
-/*#__PURE__*/
-function (_Component8) {
-  _inherits(RPanelLink, _Component8);
-
-  function RPanelLink() {
-    _classCallCheck(this, RPanelLink);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelLink).apply(this, arguments));
-  }
-
-  _createClass(RPanelLink, [{
-    key: "render",
-    value: function render() {
-      var item = this.props.item;
-      var text = item.text,
-          href = item.href;
-      return _react.default.createElement("a", {
-        className: "r-panel-control r-panel-list",
-        href: href
-      }, text);
-    }
-  }]);
-
-  return RPanelLink;
-}(_react.Component);
-
-var RPanelSlider =
-/*#__PURE__*/
-function (_Component9) {
-  _inherits(RPanelSlider, _Component9);
-
-  function RPanelSlider() {
-    _classCallCheck(this, RPanelSlider);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelSlider).apply(this, arguments));
-  }
-
-  _createClass(RPanelSlider, [{
-    key: "render",
-    value: function render() {
-      var _this$props5 = this.props,
-          item = _this$props5.item,
-          value = _this$props5.value;
-      var onchange = this.context.onchange;
-      return _react.default.createElement(_rRangeSlider.default, {
-        className: "r-panel-control r-panel-slider",
-        points: [{
-          value: value
-        }],
-        showValue: "fix",
-        start: item.range[0],
-        end: item.range[1],
-        step: item.step,
-        min: item.min,
-        max: item.max,
-        ondrag: function ondrag(obj) {
-          onchange({
-            field: item.field,
-            value: obj.points[0].value,
-            item: item
-          });
-        }
-      });
-    }
-  }]);
-
-  return RPanelSlider;
-}(_react.Component);
-
-_defineProperty(RPanelSlider, "contextType", RPanelContext);
-
-var RPanelColor =
-/*#__PURE__*/
-function (_Component10) {
-  _inherits(RPanelColor, _Component10);
-
-  function RPanelColor(props) {
-    var _this3;
-
-    _classCallCheck(this, RPanelColor);
-
-    _this3 = _possibleConstructorReturn(this, _getPrototypeOf(RPanelColor).call(this, props));
-    _this3.state = {
-      open: false
-    };
-    return _this3;
-  }
-
-  _createClass(RPanelColor, [{
-    key: "render",
-    value: function render() {
-      var _this$props6 = this.props,
-          item = _this$props6.item,
-          value = _this$props6.value;
-      var onchange = this.context.onchange;
-      var open = this.state.open;
-      return _react.default.createElement("input", {
-        className: "r-panel-control r-panel-color",
-        type: "color",
-        onChange: function onChange(e) {
-          onchange({
-            field: item.field,
-            value: e.target.value,
-            item: item
-          });
-        },
-        value: value
-      });
-    }
-  }]);
-
-  return RPanelColor;
-}(_react.Component);
-
-_defineProperty(RPanelColor, "contextType", RPanelContext);
-
-var RPanelRangeSlider =
-/*#__PURE__*/
-function (_Component11) {
-  _inherits(RPanelRangeSlider, _Component11);
-
-  function RPanelRangeSlider() {
-    _classCallCheck(this, RPanelRangeSlider);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelRangeSlider).apply(this, arguments));
-  }
-
-  _createClass(RPanelRangeSlider, [{
-    key: "render",
-    value: function render() {
-      var _this$props7 = this.props,
-          item = _this$props7.item,
-          model = _this$props7.model;
-      var _onchange = this.context.onchange;
-      var value1 = getValueByField(model, item.field1);
-      var value2 = getValueByField(model, item.field2);
-      return _react.default.createElement(_rRangeSlider.default, {
-        className: "r-panel-control r-panel-slider r-panel-range-slider",
-        points: [{
-          value: value1
-        }, {
-          value: value2
-        }],
-        point_width: 30,
-        point_height: 20,
-        thickness: 2,
-        showValue: "fix",
-        start: item.range[0],
-        end: item.range[1],
-        step: item.step,
-        min: item.min,
-        max: item.max,
-        onchange: function onchange(obj) {
-          _onchange([{
-            field: item.field1,
-            value: obj.points[0].value,
-            item: item
-          }, {
-            field: item.field2,
-            value: obj.points[1].value,
-            item: item
-          }]);
-        }
-      });
-    }
-  }]);
-
-  return RPanelRangeSlider;
-}(_react.Component);
-
-_defineProperty(RPanelRangeSlider, "contextType", RPanelContext);
-
-var RPanelGroupButton =
-/*#__PURE__*/
-function (_Component12) {
-  _inherits(RPanelGroupButton, _Component12);
-
-  function RPanelGroupButton() {
-    _classCallCheck(this, RPanelGroupButton);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelGroupButton).apply(this, arguments));
-  }
-
-  _createClass(RPanelGroupButton, [{
-    key: "render",
-    value: function render() {
-      var _this$props8 = this.props,
-          item = _this$props8.item,
-          value = _this$props8.value;
-      var onchange = this.context.onchange;
-      return _react.default.createElement("div", {
-        className: "r-panel-control r-panel-group-button"
-      }, item.buttons.map(function (btn, i) {
-        return _react.default.createElement("button", {
-          key: i,
-          className: value === btn.value ? 'active' : undefined,
-          onClick: function onClick() {
-            onchange({
-              field: item.field,
-              value: btn.value,
-              item: item
-            });
-          }
-        }, btn.text);
-      }));
-    }
-  }]);
-
-  return RPanelGroupButton;
-}(_react.Component);
-
-_defineProperty(RPanelGroupButton, "contextType", RPanelContext);
-
-var RPanelSelect =
-/*#__PURE__*/
-function (_Component13) {
-  _inherits(RPanelSelect, _Component13);
-
-  function RPanelSelect() {
-    _classCallCheck(this, RPanelSelect);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelSelect).apply(this, arguments));
-  }
-
-  _createClass(RPanelSelect, [{
-    key: "render",
-    value: function render() {
-      var _this$props9 = this.props,
-          item = _this$props9.item,
-          value = _this$props9.value;
-      var onchange = this.context.onchange;
-      return _react.default.createElement("select", {
-        className: "r-panel-control r-panel-select",
-        value: value,
-        onChange: function onChange(e) {
-          onchange({
-            field: item.field,
-            value: e.target.value,
-            item: item
-          });
-        }
-      }, item.options.map(function (option, i) {
-        return _react.default.createElement("option", {
-          key: i,
-          value: option.value
-        }, option.text);
-      }));
-    }
-  }]);
-
-  return RPanelSelect;
-}(_react.Component);
-
-_defineProperty(RPanelSelect, "contextType", RPanelContext);
-
-var RPanelTextbox =
-/*#__PURE__*/
-function (_Component14) {
-  _inherits(RPanelTextbox, _Component14);
-
-  function RPanelTextbox() {
-    _classCallCheck(this, RPanelTextbox);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelTextbox).apply(this, arguments));
-  }
-
-  _createClass(RPanelTextbox, [{
-    key: "render",
-    value: function render() {
-      var _this$props10 = this.props,
-          item = _this$props10.item,
-          value = _this$props10.value;
-      var onchange = this.context.onchange;
-      var list, listId;
-
-      if (item.list) {
-        listId = 'datalist' + Math.random();
-        list = _react.default.createElement("datalist", {
-          id: listId
-        }, item.list.map(function (l, i) {
-          return _react.default.createElement("option", {
-            value: l,
-            key: i
-          });
-        }));
-      }
-
-      return _react.default.createElement(_react.Fragment, null, _react.default.createElement("input", {
-        list: listId,
-        disabled: item.disabled,
-        maxLength: item.maxLength,
-        type: "text",
-        className: "r-panel-control r-panel-textbox",
-        value: value,
-        onChange: function onChange(e) {
-          onchange({
-            field: item.field,
-            value: e.target.value,
-            item: item
-          });
-        }
-      }), list && list);
-    }
-  }]);
-
-  return RPanelTextbox;
-}(_react.Component);
-
-_defineProperty(RPanelTextbox, "contextType", RPanelContext);
-
-var RPanelNumberbox =
-/*#__PURE__*/
-function (_Component15) {
-  _inherits(RPanelNumberbox, _Component15);
-
-  function RPanelNumberbox() {
-    _classCallCheck(this, RPanelNumberbox);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelNumberbox).apply(this, arguments));
-  }
-
-  _createClass(RPanelNumberbox, [{
-    key: "render",
-    value: function render() {
-      var _this$props11 = this.props,
-          item = _this$props11.item,
-          value = _this$props11.value;
-      var onchange = this.context.onchange;
-      return _react.default.createElement("input", _extends({}, item, {
-        type: "number",
-        className: "r-panel-control r-panel-textbox r-panel-numberbox",
-        value: value,
-        onChange: function onChange(e) {
-          onchange({
-            field: item.field,
-            value: parseFloat(e.target.value),
-            item: item
-          });
-        }
-      }));
-    }
-  }]);
-
-  return RPanelNumberbox;
-}(_react.Component);
-
-_defineProperty(RPanelNumberbox, "contextType", RPanelContext);
-
-var RPanelCheckbox =
-/*#__PURE__*/
-function (_Component16) {
-  _inherits(RPanelCheckbox, _Component16);
-
-  function RPanelCheckbox() {
-    _classCallCheck(this, RPanelCheckbox);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelCheckbox).apply(this, arguments));
-  }
-
-  _createClass(RPanelCheckbox, [{
-    key: "render",
-    value: function render() {
-      var _this$props12 = this.props,
-          item = _this$props12.item,
-          value = _this$props12.value;
-      var onchange = this.context.onchange;
-      return _react.default.createElement("div", {
-        className: "r-panel-control r-panel-checkbox"
-      }, _react.default.createElement("input", {
-        type: "checkbox",
-        checked: value === true,
-        onChange: function onChange(e) {
-          onchange({
-            field: item.field,
-            value: e.target.checked,
-            item: item
-          });
-        }
-      }));
-    }
-  }]);
-
-  return RPanelCheckbox;
-}(_react.Component);
-
-_defineProperty(RPanelCheckbox, "contextType", RPanelContext);
-
-var RPanelAlert =
-/*#__PURE__*/
-function (_Component17) {
-  _inherits(RPanelAlert, _Component17);
+var RPanelAlert = /*#__PURE__*/function (_Component6) {
+  _inherits(RPanelAlert, _Component6);
 
   function RPanelAlert() {
     _classCallCheck(this, RPanelAlert);
@@ -1028,22 +831,9 @@ function (_Component17) {
       var info = item.info,
           warning = item.warning,
           danger = item.danger;
-      var message, type;
-
-      if (danger) {
-        message = danger;
-        type = 'danger';
-      } else if (warning) {
-        message = warning;
-        type = 'warning';
-      } else if (info) {
-        message = info;
-        type = 'info';
-      }
-
       return _react.default.createElement("div", {
-        className: "r-panel-control r-panel-alert ".concat(type)
-      }, message);
+        className: "r-panel-control r-panel-alert ".concat(danger ? 'danger' : warning ? 'warning' : 'info')
+      }, danger || warning || info);
     }
   }]);
 
@@ -1051,94 +841,3 @@ function (_Component17) {
 }(_react.Component);
 
 _defineProperty(RPanelAlert, "contextType", RPanelContext);
-
-var RPanelHeader =
-/*#__PURE__*/
-function (_Component18) {
-  _inherits(RPanelHeader, _Component18);
-
-  function RPanelHeader() {
-    _classCallCheck(this, RPanelHeader);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelHeader).apply(this, arguments));
-  }
-
-  _createClass(RPanelHeader, [{
-    key: "render",
-    value: function render() {
-      var _this$context2 = this.context,
-          _this$context2$title = _this$context2.title,
-          title = _this$context2$title === void 0 ? null : _this$context2$title,
-          close = _this$context2.close,
-          mousedown = _this$context2.mousedown,
-          touch = _this$context2.touch;
-
-      if (title === null) {
-        return '';
-      }
-
-      var props = _defineProperty({
-        className: 'r-panel-header'
-      }, touch ? 'onTouchStart' : 'onMouseDown', mousedown);
-
-      return _react.default.createElement("div", props, _react.default.createElement("div", {
-        className: "r-panel-title"
-      }, title), _react.default.createElement("div", {
-        className: "r-panel-close",
-        onClick: close
-      }));
-    }
-  }]);
-
-  return RPanelHeader;
-}(_react.Component);
-
-_defineProperty(RPanelHeader, "contextType", RPanelContext);
-
-var RPanelFooter =
-/*#__PURE__*/
-function (_Component19) {
-  _inherits(RPanelFooter, _Component19);
-
-  function RPanelFooter() {
-    _classCallCheck(this, RPanelFooter);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(RPanelFooter).apply(this, arguments));
-  }
-
-  _createClass(RPanelFooter, [{
-    key: "render",
-    value: function render() {
-      var _this$context3 = this.context,
-          _this$context3$button = _this$context3.buttons,
-          buttons = _this$context3$button === void 0 ? [] : _this$context3$button,
-          buttonClick = _this$context3.buttonClick,
-          reset = _this$context3.reset,
-          resetCallback = _this$context3.resetCallback;
-      var resetBtn = reset === true ? [{
-        text: 'reset',
-        callback: resetCallback
-      }] : [];
-      var btns = resetBtn.concat(buttons);
-
-      if (!btns.length) {
-        return '';
-      }
-
-      return _react.default.createElement("div", {
-        className: "r-panel-footer"
-      }, btns.map(function (btn, i) {
-        return _react.default.createElement("button", {
-          key: i,
-          onClick: function onClick() {
-            buttonClick(btn);
-          }
-        }, btn.text);
-      }));
-    }
-  }]);
-
-  return RPanelFooter;
-}(_react.Component);
-
-_defineProperty(RPanelFooter, "contextType", RPanelContext);
