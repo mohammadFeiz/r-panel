@@ -1,6 +1,6 @@
 {
   "name": "r-panel",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,6 @@
   },
   "dependencies": {
     "jquery": "^3.4.1",
-    "r-actions": "^1.0.15",
     "r-range-slider": "^3.0.3",
     "react": "^16.12.0",
     "react-dom": "^16.12.0"
