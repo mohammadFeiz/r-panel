@@ -118,9 +118,7 @@
   border:2px solid;
   outline:none;
 }
-.r-panel-group-button button:last-child{
-  border-right:none;
-}
+
 .r-panel-textbox{
   border:none;
   height:var(--jc-item-height); 
@@ -129,6 +127,7 @@
 }
 .r-panel-numberbox{
   text-align:center;
+  margin:0 1px;
 }
 .r-panel-select{
   border:none;
@@ -277,7 +276,6 @@
 .r-panel input[type=color]{
   border:none;
   padding:0;
-  
 }
 
 .r-panel-list{

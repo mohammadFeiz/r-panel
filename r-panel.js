@@ -95,6 +95,19 @@ export default class RPanel extends Component {
     this.eventHandler('window','mousemove',this.mousemove,'unbind');
     this.eventHandler('window','mouseup',this.mouseup,'unbind');
   }
+  getValueByField(obj,field){
+    if(!field || field === null){return undefined;}
+    var fieldString = typeof field === 'function'?field(obj):field;
+    if(!fieldString ||typeof fieldString !== 'string'){console.error('RGauger.getValueByField() receive invalid field'); return undefined}
+    var fields = fieldString.split('.');
+    var value = obj[fields[0]];
+    if(value === undefined){return;}
+    for(var i = 1; i < fields.length; i++){
+      value = value[fields[i]];
+      if(value === undefined || value === null){return;}
+    }
+    return value;
+  }
   setValueByField(obj,field,value){
     var fields = field.split('.');
     var node = obj;
@@ -105,7 +118,7 @@ export default class RPanel extends Component {
     node[fields[fields.length - 1]] = value;
     return obj;
   }
-  onchange(obj){
+  onchange(obj){ 
     var {onchange} = this.props;
     var {model} = this.state;
     model = JSON.parse(JSON.stringify(model));
@@ -115,7 +128,8 @@ export default class RPanel extends Component {
       }
     }
     else{
-      this.setValueByField(model,obj.field,obj.value);
+      var value = obj.set?obj.set(obj.value):obj.value;
+      this.setValueByField(model,obj.field,value);
     }
     if(onchange){onchange(model);}
     else{this.setState({model});}
@@ -132,42 +146,28 @@ export default class RPanel extends Component {
   render() {
     var {opened,model} = this.state;
     if(opened !== true){return '';}
-    var {backdrop,items,title = '',buttons,reset,style,backdropClose,rowStyle,activeColor,controlColor,textColor,background,titleStyle} = this.props;
-
+    var {backdrop,items,header,buttons = [],reset,style,backdropClose,rowStyle,activeColor,controlColor,textColor,background,titleStyle} = this.props;
     var contextValue = {
       close:this.close.bind(this),
       toggle:this.toggle.bind(this),
       buttonClick:this.buttonClick.bind(this),
       resetCallback:this.resetCallback.bind(this),
+      getValueByField:this.getValueByField.bind(this),
       onchange:this.onchange.bind(this),
       validate:this.validate.bind(this),
       mousedown:this.mousedown.bind(this),
       getValue:this.getValue.bind(this),
       touch:this.touch,
       activeColor,controlColor,textColor,background,
-      reset,buttons,items,model,title,rowStyle,titleStyle
+      reset,buttons,items,model,rowStyle,titleStyle
     }
     return (
       <RPanelContext.Provider value={contextValue}>
         <div className={'r-panel'} ref={this.dom} style={$.extend({},{color:textColor,background},style)}>
           {backdrop && <div className='r-panel-backdrop' onClick={()=>{if(backdropClose){this.close()}}}></div>}
-          {
-            title && title !== null && 
-            <div {...{className:'r-panel-header',[this.touch?'onTouchStart':'onMouseDown']:this.mousedown.bind(this)}}>
-              <div className='r-panel-title'>{title}</div>
-              <div className='r-panel-close' onClick={this.close.bind(this)}></div>
-            </div>
-          }
-          <div className='r-panel-body'><div className='r-panel-body-container'>
-            {items.map((item,i)=><RPanelItem item={item} key={i}/>)}
-          </div></div>
-          <div className='r-panel-footer'>
-            {
-              ((reset === true?[{text:'reset',callback:this.resetCallback.bind(this)}]:[]).concat(buttons)).map((btn,i)=>
-                <button key ={i} onClick={()=>{this.buttonClick(btn)}}>{btn.text}</button>
-              )
-            }
-          </div>
+          {header && <RPanelHeader title={header.title || ''}/>}
+          {<RPanelBody items={items}/>}
+          {buttons.length > 0 && <RPanelFooter />}
         </div>
       </RPanelContext.Provider>
     );
@@ -176,32 +176,90 @@ export default class RPanel extends Component {
 RPanel.defaultProps = {items:[],buttons:[],width:'300px',alignX:'center',controlColor:'rgb(87, 92, 102)',activeColor:'rgb(255, 102, 0)',textColor:'#fff',background:'rgb(76, 82, 90)'}
 
 
-class RPanelItem extends Component{
+class RPanelHeader extends Component{
+  static contextType = RPanelContext;
   render(){
-    var {item,level = 0} = this.props;
-    var {opened = true} = item;
+    var {touch,mousedown} = this.context;
     return (
-      <Fragment>
-          {
-            item.group &&
-            <Fragment>
-              <RPanelGroup item={item} level={level}/>
-              {opened && item.group.map((itm,i)=><RPanelItem item={itm} level={level+1} key={i}/>)}
-            </Fragment>
-          }
-          {!item.group && <RPanelControl item={item} level={level}/>}
-        </Fragment>
+      <div {...{className:'r-panel-header',[touch?'onTouchStart':'onMouseDown']:mousedown}}>
+        <div className='r-panel-title'>{header.title || ''}</div>
+        <div className='r-panel-close' onClick={this.close.bind(this)}></div>
+      </div>
     );
   }
 }
-class RPanelControl extends Component{
+
+class RPanelBody extends Component{
+  render(){
+    return (
+      <div className='r-panel-body'>
+        <div className='r-panel-body-container'>
+          {this.props.items.map((item,i)=><RPanelItem item={item} key={i}/>)}
+        </div>
+      </div>
+    );
+  }
+}
+class RPanelFooter extends Component{
+  static contextType = RPanelContext;
+  render(){
+    var {resetCallback,reset,buttons,buttonClick} = this.context;
+    var Buttons = [];
+    if(reset){Buttons.push({text:'reset',callback:resetCallback})}
+    Buttons = Buttons.concat(buttons);
+    return (
+      <div className='r-panel-footer'>
+        {Buttons.map((btn,i)=><button key ={i} onClick={()=>{buttonClick(btn)}}>{btn.text}</button>)}
+      </div>
+    )
+  }
+}
+class RPanelItem extends Component{
   static contextType = RPanelContext;
   getStyle(){
-    var {level,item} = this.props;
+    var {level = 0,item} = this.props;
     var {rowStyle = {}} = this.context;
     var style = $.extend({},{paddingLeft:level?(level * 24)+'px':undefined},rowStyle);
     return style;
   }
+  getGroup(item,level){
+    return (
+      <Fragment>
+        <RPanelGroup item={item} level={level}/>
+        {item.opened !== false && item.group.map((itm,i)=><RPanelItem item={itm} level={level+1} key={i}/>)}
+      </Fragment>
+    )
+  }
+  getItem(item,value){
+    var {getValue,validate} = this.context;
+    var validationState = validate(item,value);
+    var itemProps = {className:'r-panel-item',style:this.getStyle(),onClick:()=>{if(item.callback){item.callback(item)}}};
+    return (
+      <Fragment>
+        <div {...itemProps}>
+          {item.title && <RPanelItemTitle title={getValue(item.title)} field={getValue(item.field)} />}
+          {<RPanelControl item={item} value={value}/>}
+        </div>
+        {
+          validationState && validationState.state === false &&
+          <div {...itemProps}><RPanelAlert item={validationState}/></div>
+        }
+      </Fragment>
+    )
+  }
+  render(){
+    var {item,level = 0} = this.props;
+    var {get} = item;
+    var field = typeof item.field === 'function'?item.field():item.field;
+    var {getValueByField,model} = this.context;
+    var value = get?get(getValueByField(model,field)):getValueByField(model,field);
+    return (<Fragment>{
+      item.group?this.getGroup(item,level):this.getItem(item,value)
+    }</Fragment>);
+  }
+}
+class RPanelControl extends Component{
+  static contextType = RPanelContext;  
   isColor(value){
     if(value.indexOf('rgb(') !== -1){return true;}
     if(value.indexOf('rgba(') !== -1){return true;}
@@ -210,109 +268,23 @@ class RPanelControl extends Component{
     }
     return false;
   }
-  getValueByField(obj,field){
-    if(!field || field === null){return undefined;}
-    var fieldString = typeof field === 'function'?field(obj):field;
-    if(!fieldString ||typeof fieldString !== 'string'){console.error('RGauger.getValueByField() receive invalid field'); return undefined}
-    var fields = fieldString.split('.');
-    var value = obj[fields[0]];
-    if(value === undefined){return;}
-    for(var i = 1; i < fields.length; i++){
-      value = value[fields[i]];
-      if(value === undefined || value === null){return;}
-    }
-    return value;
-  }
   render(){
-    const {model,validate,textColor,getValue,activeColor,controlColor,onchange} = this.context;
-    var {item} = this.props;
-    var {iconClass,iconColor} = item;
-    var field = typeof item.field === 'function'?item.field():item.field;
-    var value = this.getValueByField(model,field);
+    var {item,value} = this.props;
+    var {getValueByField,model} = this.context;
     var type = typeof value;
-    var validationState = validate(item,value);
-    var control;
-    if(item.range){control = (<Slider
-        className='r-panel-control r-panel-slider'
-        style={{padding:'6px'}}
-        points={[{value,fillStyle:{background:activeColor,height:'3px'}}]}
-        pointStyle={{display:'none'}}
-        showValue='fixed'
-        valueStyle={{top:'-10px',height:'20px',lineHeight:'20px',background:controlColor,minWidth:'20px',textAlign:'center'}}
-        lineStyle={{background:controlColor,height:'3px'}}
-        start={item.range[0]} end={item.range[1]} step={item.step}
-        min={item.min} max={item.max}
-        ondrag={(obj)=>{onchange({field:item.field,value:obj.points[0].value,item});}}
-    />)}
-    else if(item.buttons && item.buttons.length){control= (
-      <div className="r-panel-control r-panel-group-button">
-        {
-          item.buttons.map((btn,i)=>{
-            let active = value === btn.value;
-            return (
-              <button
-                style={{background:controlColor,borderColor:active?activeColor:undefined,color:active?activeColor:undefined}}
-                key={i} className={active?'active':undefined}
-                onClick={()=>{onchange({field:item.field,value:btn.value,item});}}
-              >{btn.text}</button>
-            )
-        })
-      }
-      </div>)}
-    else if(item.options && item.options.length){
-      control=(
-        <select
-          className='r-panel-control r-panel-select' value={value} style={{background:controlColor}}
-          onChange={(e)=>{onchange({field:item.field,value:e.target.value,item})}
-        }>
-          {item.options.map((option,i)=><option key={i} value={option.value}>{option.text}</option>)}
-        </select>
-      )
-    }
+    if(item.items){return item.items.map((itm,i)=><RPanelControl key={i} item={itm} value={itm.get?itm.get(getValueByField(model,itm.field)):getValueByField(model,itm.field)}/>)}
+    else if(item.range){return <RPanelSlider value={value} item={item}/>}
+    else if(item.buttons && item.buttons.length){return <RPanelButtons item={item} value={value}/>}
+    else if(item.options && item.options.length){return <RPanelSelect item={item} value={value}/>}
     else if(type === 'string'){
-      if(this.isColor(value)){control = 
-      <input className='r-panel-control r-panel-color' type='color' onChange={(e)=>{onchange({field:item.field,value:e.target.value,item});}} value={value} style={{background:controlColor}}/>}
-      else{
-        var listId = 'datalist' + Math.random();
-        var list= item.list?<datalist id={listId}>{item.list.map((l,i)=><option value={l} key={i}/>)}</datalist>:undefined
-        control = <Fragment>
-        <input list={listId}
-          style={{background:controlColor}} disabled={item.disabled} maxLength={item.maxLength} type='text'
-          className='r-panel-control r-panel-textbox' 
-          value={value}
-          onChange={(e)=>{onchange({field:item.field,value:e.target.value,item});}}
-        />
-        {list && list}
-      </Fragment>}
+      if(this.isColor(value)){return <RPanelColor value={value} item={item}/>}
+      else{return <RPanelTextbox value={value} item={item}/> }
     }
-    else if(type === 'number'){control = <input {...item} style={{background:controlColor}} type='number' value={value}
-        className='r-panel-control r-panel-textbox r-panel-numberbox'
-        onChange={(e)=>{onchange({field:item.field,value:parseFloat(e.target.value),item});}}
-    />}
-    else if(type === 'boolean'){control = <div className='r-panel-control r-panel-checkbox'>
-        <div 
-          style={{borderColor:textColor,color:activeColor}}
-          className={`checkbox${value === true?' checked':''}`}
-          onClick={()=>onchange({field:item.field,value:!value,item})}
-        ></div>
-      </div>}
-    else if(item.info || item.warning || item.danger){control = <RPanelAlert item={item} />}
-    else if(item.text && item.href){control = <a className='r-panel-control r-panel-list' href={item.href}>{item.text}</a>}
-    else if(item.text){control = <div className='r-panel-control r-panel-list'>{getValue(item.text)}</div>}
-    return (
-      <Fragment>
-        <div className='r-panel-item' style={this.getStyle()} onClick={()=>{if(item.callback){item.callback(item)}}}>
-          {item.title && <RPanelItemTitle title={getValue(item.title)} field={getValue(item.field)} />}
-          {control}
-        </div>
-        {
-          validationState && validationState.state === false &&
-          <div className='r-panel-item' style={this.getStyle()}>
-            <RPanelAlert item={validationState}/>
-          </div>
-        }
-      </Fragment>
-    );
+    else if(type === 'number'){return <RPanelNumberbox item={item} value={value}/>}
+    else if(type === 'boolean'){return <RPanelCheckbox item={item} value={value}/>}
+    else if(item.info || item.warning || item.danger){return <RPanelAlert item={item} />}
+    else if(item.text && item.href){return <RPanelLink item={item}/>}
+    else if(item.text){return <RPanelList item={item}/>}
   }
 }
 class RPanelGroup extends Component{
@@ -369,3 +341,161 @@ class RPanelAlert extends Component{
     )
   }
 }
+
+
+class RPanelNumberbox extends Component{
+  static contextType = RPanelContext;
+  render(){
+    var {item,value} = this.props;
+    var {controlColor,onchange} = this.context;
+    return (
+      <input {...item} style={{background:controlColor}} type='number' value={value}
+        className='r-panel-control r-panel-textbox r-panel-numberbox'
+        onChange={(e)=>{onchange({field:item.field,value:parseFloat(e.target.value),item});}}
+    />
+    );
+  }
+}
+
+class RPanelSlider extends Component{
+  static contextType = RPanelContext;
+  render(){
+    var {activeColor,controlColor,onchange} = this.context;
+    var {value,item} = this.props;  
+    return (
+      <Slider
+        className='r-panel-control r-panel-slider'
+        style={{padding:'0 12px'}}
+        points={[{value,fillStyle:{background:activeColor,height:'3px'}}]}
+        pointStyle={{display:'none'}}
+        showValue='fixed'
+        valueStyle={{top:'-10px',height:'20px',lineHeight:'20px',background:controlColor,minWidth:'20px',textAlign:'center'}}
+        lineStyle={{background:controlColor,height:'3px'}}
+        start={item.range[0]} end={item.range[1]} step={item.step}
+        min={item.min} max={item.max}
+        ondrag={(obj)=>{onchange({field:item.field,value:obj.points[0].value,item});}}
+      />
+    )
+  }
+}
+
+class RPanelButtons extends Component{
+  static contextType = RPanelContext;
+  render(){
+    var {item,value} = this.props;
+    var {controlColor,activeColor,onchange} = this.context;
+    return (
+      <div className="r-panel-control r-panel-group-button">
+        {
+          item.buttons.map((btn,i)=>{
+            let active = value === btn.value;
+            return (
+              <button
+                style={{background:controlColor,borderColor:active?activeColor:undefined,color:active?activeColor:undefined}}
+                key={i} className={active?'active':undefined}
+                onClick={()=>{onchange({field:item.field,value:btn.value,item});}}
+              >{btn.text}</button>
+          )
+        })
+      }
+      </div>
+    )
+  }
+}
+
+class RPanelSelect extends Component{
+  static contextType = RPanelContext;
+  render(){
+    var {value,item} = this.props;
+    var {onchange,controlColor} = this.context;
+    return (
+      <select
+          className='r-panel-control r-panel-select' value={value} style={{background:controlColor}}
+          onChange={(e)=>{onchange({field:item.field,value:e.target.value,item})}
+        }>
+          {item.options.map((option,i)=><option key={i} value={option.value}>{option.text}</option>)}
+      </select>
+    );
+  }
+}
+
+class RPanelColor extends Component{
+  static contextType = RPanelContext;
+  render(){
+    var {item,value} = this.props;
+    var {onchange,controlColor} = this.context;
+    return (
+      <input 
+        className='r-panel-control r-panel-color' 
+        type='color' 
+        onChange={(e)=>{onchange({field:item.field,value:e.target.value,item});}} 
+        value={value} 
+        style={{background:controlColor}}
+      />
+    );
+  }
+}
+
+class RPanelTextbox extends Component{
+  static contextType = RPanelContext;
+  render(){
+    var {value,item} = this.props;
+    var {controlColor,onchange} = this.context;
+    var listId = 'datalist' + Math.random();
+    var list= item.list?<datalist id={listId}>{item.list.map((l,i)=><option value={l} key={i}/>)}</datalist>:undefined
+    return (
+      <Fragment>
+        <input list={listId}
+          style={{background:controlColor}} disabled={item.disabled} maxLength={item.maxLength} type='text'
+          className='r-panel-control r-panel-textbox' 
+          value={value}
+          onChange={(e)=>{onchange({field:item.field,value:e.target.value,item});}}
+        />
+        {list && list}
+      </Fragment>
+    )
+  }
+}
+
+class RPanelCheckbox extends Component{
+  static contextType = RPanelContext;
+  render(){
+    var {item,value} = this.props;
+    var {onchange,textColor,activeColor} = this.context;
+    return (
+      <div className='r-panel-control r-panel-checkbox'>
+        <div 
+          style={{borderColor:textColor,color:activeColor}}
+          className={`checkbox${value === true?' checked':''}`}
+          onClick={()=>onchange({field:item.field,value:!value,item})}
+        ></div>
+      </div>
+    );
+  }
+}
+
+class RPanelLink extends Component{
+  render(){
+    var {item} = this.props;
+    return (
+      <a className='r-panel-control r-panel-list' href={item.href}>{item.text}</a>
+    );
+  }
+}
+
+class RPanelList extends Component{
+  static contextType = RPanelContext;
+  render(){
+    var {item} = this.props;
+    var {getValue} = this.context;
+    return (
+      <div className='r-panel-control r-panel-list'>{getValue(item.text)}</div>
+    );
+  }
+}
+
+
+
+
+
+
