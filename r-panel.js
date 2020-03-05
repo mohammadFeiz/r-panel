@@ -118,19 +118,12 @@ export default class RPanel extends Component {
     node[fields[fields.length - 1]] = value;
     return obj;
   }
-  onchange(obj){ 
+  onchange(item,value){ 
     var {onchange} = this.props;
     var {model} = this.state;
     model = JSON.parse(JSON.stringify(model));
-    if(Array.isArray(obj)){
-      for(var i = 0; i < obj.length; i++){
-        this.setValueByField(model,obj[i].field,obj[i].value);
-      }
-    }
-    else{
-      var value = obj.set?obj.set(obj.value):obj.value;
-      this.setValueByField(model,obj.field,value);
-    }
+    var Value = item.set?item.set(value):value;
+    this.setValueByField(model,item.field,Value);
     if(onchange){onchange(model);}
     else{this.setState({model});}
 
@@ -351,7 +344,7 @@ class RPanelNumberbox extends Component{
     return (
       <input {...item} style={{background:controlColor}} type='number' value={value}
         className='r-panel-control r-panel-textbox r-panel-numberbox'
-        onChange={(e)=>{onchange({field:item.field,value:parseFloat(e.target.value),item});}}
+        onChange={(e)=>{onchange(item,parseFloat(e.target.value));}}
     />
     );
   }
@@ -373,7 +366,7 @@ class RPanelSlider extends Component{
         lineStyle={{background:controlColor,height:'3px'}}
         start={item.range[0]} end={item.range[1]} step={item.step}
         min={item.min} max={item.max}
-        ondrag={(obj)=>{onchange({field:item.field,value:obj.points[0].value,item});}}
+        ondrag={(obj)=>{onchange(item,obj.points[0].value);}}
       />
     )
   }
@@ -391,9 +384,13 @@ class RPanelButtons extends Component{
             let active = value === btn.value;
             return (
               <button
-                style={{background:controlColor,borderColor:active?activeColor:undefined,color:active?activeColor:undefined}}
+                style={{
+                  background:active?activeColor:controlColor,
+                  width:btn.width,
+                  flex:btn.width?'unset':1
+                }}
                 key={i} className={active?'active':undefined}
-                onClick={()=>{onchange({field:item.field,value:btn.value,item});}}
+                onClick={()=>{onchange(item,btn.value);}}
               >{btn.text}</button>
           )
         })
@@ -411,7 +408,7 @@ class RPanelSelect extends Component{
     return (
       <select
           className='r-panel-control r-panel-select' value={value} style={{background:controlColor}}
-          onChange={(e)=>{onchange({field:item.field,value:e.target.value,item})}
+          onChange={(e)=>{onchange(item,e.target.value)}
         }>
           {item.options.map((option,i)=><option key={i} value={option.value}>{option.text}</option>)}
       </select>
@@ -428,7 +425,7 @@ class RPanelColor extends Component{
       <input 
         className='r-panel-control r-panel-color' 
         type='color' 
-        onChange={(e)=>{onchange({field:item.field,value:e.target.value,item});}} 
+        onChange={(e)=>{onchange(item,e.target.value);}} 
         value={value} 
         style={{background:controlColor}}
       />
@@ -449,7 +446,7 @@ class RPanelTextbox extends Component{
           style={{background:controlColor}} disabled={item.disabled} maxLength={item.maxLength} type='text'
           className='r-panel-control r-panel-textbox' 
           value={value}
-          onChange={(e)=>{onchange({field:item.field,value:e.target.value,item});}}
+          onChange={(e)=>{onchange(item,e.target.value);}}
         />
         {list && list}
       </Fragment>
@@ -467,7 +464,7 @@ class RPanelCheckbox extends Component{
         <div 
           style={{borderColor:textColor,color:activeColor}}
           className={`checkbox${value === true?' checked':''}`}
-          onClick={()=>onchange({field:item.field,value:!value,item})}
+          onClick={()=>onchange(item,!value)}
         ></div>
       </div>
     );
@@ -493,9 +490,3 @@ class RPanelList extends Component{
     );
   }
 }
-
-
-
-
-
-
