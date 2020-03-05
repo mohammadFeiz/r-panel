@@ -226,19 +226,12 @@ var RPanel = /*#__PURE__*/function (_Component) {
     }
   }, {
     key: "onchange",
-    value: function onchange(obj) {
+    value: function onchange(item, value) {
       var onchange = this.props.onchange;
       var model = this.state.model;
       model = JSON.parse(JSON.stringify(model));
-
-      if (Array.isArray(obj)) {
-        for (var i = 0; i < obj.length; i++) {
-          this.setValueByField(model, obj[i].field, obj[i].value);
-        }
-      } else {
-        var value = obj.set ? obj.set(obj.value) : obj.value;
-        this.setValueByField(model, obj.field, value);
-      }
+      var Value = item.set ? item.set(value) : value;
+      this.setValueByField(model, item.field, Value);
 
       if (onchange) {
         onchange(model);
@@ -837,11 +830,7 @@ var RPanelNumberbox = /*#__PURE__*/function (_Component10) {
         value: value,
         className: "r-panel-control r-panel-textbox r-panel-numberbox",
         onChange: function onChange(e) {
-          onchange({
-            field: item.field,
-            value: parseFloat(e.target.value),
-            item: item
-          });
+          onchange(item, parseFloat(e.target.value));
         }
       }));
     }
@@ -905,11 +894,7 @@ var RPanelSlider = /*#__PURE__*/function (_Component11) {
         min: item.min,
         max: item.max,
         ondrag: function ondrag(obj) {
-          onchange({
-            field: item.field,
-            value: obj.points[0].value,
-            item: item
-          });
+          onchange(item, obj.points[0].value);
         }
       });
     }
@@ -945,18 +930,14 @@ var RPanelButtons = /*#__PURE__*/function (_Component12) {
         var active = value === btn.value;
         return _react.default.createElement("button", {
           style: {
-            background: controlColor,
-            borderColor: active ? activeColor : undefined,
-            color: active ? activeColor : undefined
+            background: active ? activeColor : controlColor,
+            width: btn.width,
+            flex: btn.width ? 'unset' : 1
           },
           key: i,
           className: active ? 'active' : undefined,
           onClick: function onClick() {
-            onchange({
-              field: item.field,
-              value: btn.value,
-              item: item
-            });
+            onchange(item, btn.value);
           }
         }, btn.text);
       }));
@@ -993,11 +974,7 @@ var RPanelSelect = /*#__PURE__*/function (_Component13) {
           background: controlColor
         },
         onChange: function onChange(e) {
-          onchange({
-            field: item.field,
-            value: e.target.value,
-            item: item
-          });
+          onchange(item, e.target.value);
         }
       }, item.options.map(function (option, i) {
         return _react.default.createElement("option", {
@@ -1035,11 +1012,7 @@ var RPanelColor = /*#__PURE__*/function (_Component14) {
         className: "r-panel-control r-panel-color",
         type: "color",
         onChange: function onChange(e) {
-          onchange({
-            field: item.field,
-            value: e.target.value,
-            item: item
-          });
+          onchange(item, e.target.value);
         },
         value: value,
         style: {
@@ -1092,11 +1065,7 @@ var RPanelTextbox = /*#__PURE__*/function (_Component15) {
         className: "r-panel-control r-panel-textbox",
         value: value,
         onChange: function onChange(e) {
-          onchange({
-            field: item.field,
-            value: e.target.value,
-            item: item
-          });
+          onchange(item, e.target.value);
         }
       }), list && list);
     }
@@ -1135,11 +1104,7 @@ var RPanelCheckbox = /*#__PURE__*/function (_Component16) {
         },
         className: "checkbox".concat(value === true ? ' checked' : ''),
         onClick: function onClick() {
-          return onchange({
-            field: item.field,
-            value: !value,
-            item: item
-          });
+          return onchange(item, !value);
         }
       }));
     }
