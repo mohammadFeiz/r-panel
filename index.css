@@ -103,9 +103,8 @@
   flex-wrap: wrap;
 }
 .r-panel-group-button button{
-  font-size:100%;
+  font-size:85%;
   border:none;
-  flex:1;
   margin:0 1px;
   color:inherit;
   height:var(--jc-item-height);
@@ -115,7 +114,6 @@
   
 }
 .r-panel-group-button button.active{
-  border:2px solid;
   outline:none;
 }
 
@@ -232,7 +230,6 @@
 .r-panel-body-container{
   width:fit-content;
   height:100%;
-  position: absolute;;
   left:0;
   top:0;
   min-width:100%;
