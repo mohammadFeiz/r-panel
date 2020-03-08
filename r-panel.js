@@ -139,7 +139,7 @@ export default class RPanel extends Component {
   render() {
     var {opened,model} = this.state;
     if(opened !== true){return '';}
-    var {backdrop,items,header,buttons = [],reset,style,backdropClose,rowStyle,activeColor,controlColor,textColor,background,titleStyle} = this.props;
+    var {backdrop,items,header,buttons = [],reset,style,backdropClose,rowStyle,activeColor,controlColor,textColor,background,titleStyle,backdropStyle} = this.props;
     var contextValue = {
       close:this.close.bind(this),
       toggle:this.toggle.bind(this),
@@ -157,7 +157,7 @@ export default class RPanel extends Component {
     return (
       <RPanelContext.Provider value={contextValue}>
         <div className={'r-panel'} ref={this.dom} style={$.extend({},{color:textColor,background},style)}>
-          {backdrop && <div className='r-panel-backdrop' onClick={()=>{if(backdropClose){this.close()}}}></div>}
+          {backdrop && <div style={backdropStyle} className='r-panel-backdrop' onClick={()=>{if(backdropClose){this.close()}}}></div>}
           {header && <RPanelHeader title={header.title || ''}/>}
           {<RPanelBody items={items}/>}
           {buttons.length > 0 && <RPanelFooter />}
@@ -279,6 +279,8 @@ class RPanelControl extends Component{
     else if(item.info || item.warning || item.danger){return <RPanelAlert item={item} />}
     else if(item.text && item.href){return <RPanelLink item={item}/>}
     else if(item.text){return <RPanelList item={item}/>}
+    else if(item.html){return item.html;}
+    
     else {return '';}
   }
 }

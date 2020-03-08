@@ -280,7 +280,8 @@ var RPanel = /*#__PURE__*/function (_Component) {
           controlColor = _this$props.controlColor,
           textColor = _this$props.textColor,
           background = _this$props.background,
-          titleStyle = _this$props.titleStyle;
+          titleStyle = _this$props.titleStyle,
+          backdropStyle = _this$props.backdropStyle;
       var contextValue = {
         close: this.close.bind(this),
         toggle: this.toggle.bind(this),
@@ -313,6 +314,7 @@ var RPanel = /*#__PURE__*/function (_Component) {
           background: background
         }, style)
       }, backdrop && _react.default.createElement("div", {
+        style: backdropStyle,
         className: "r-panel-backdrop",
         onClick: function onClick() {
           if (backdropClose) {
@@ -674,6 +676,8 @@ var RPanelControl = /*#__PURE__*/function (_Component6) {
         return _react.default.createElement(RPanelList, {
           item: item
         });
+      } else if (item.html) {
+        return item.html;
       } else {
         return '';
       }
