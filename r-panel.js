@@ -172,11 +172,12 @@ RPanel.defaultProps = {items:[],buttons:[],width:'300px',alignX:'center',control
 class RPanelHeader extends Component{
   static contextType = RPanelContext;
   render(){
-    var {touch,mousedown} = this.context;
+    var {touch,mousedown,close} = this.context;
+    var {title} = this.props;
     return (
       <div {...{className:'r-panel-header',[touch?'onTouchStart':'onMouseDown']:mousedown}}>
-        <div className='r-panel-title'>{header.title || ''}</div>
-        <div className='r-panel-close' onClick={this.close.bind(this)}></div>
+        <div className='r-panel-title'>{title || ''}</div>
+        <div className='r-panel-close' onClick={close}></div>
       </div>
     );
   }
@@ -278,6 +279,7 @@ class RPanelControl extends Component{
     else if(item.info || item.warning || item.danger){return <RPanelAlert item={item} />}
     else if(item.text && item.href){return <RPanelLink item={item}/>}
     else if(item.text){return <RPanelList item={item}/>}
+    else {return '';}
   }
 }
 class RPanelGroup extends Component{
@@ -490,3 +492,9 @@ class RPanelList extends Component{
     );
   }
 }
+
+
+
+
+
+

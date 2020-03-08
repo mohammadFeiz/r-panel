@@ -398,14 +398,16 @@ var RPanelHeader = /*#__PURE__*/function (_Component2) {
     value: function render() {
       var _this$context = this.context,
           touch = _this$context.touch,
-          mousedown = _this$context.mousedown;
+          mousedown = _this$context.mousedown,
+          close = _this$context.close;
+      var title = this.props.title;
       return _react.default.createElement("div", _defineProperty({
         className: 'r-panel-header'
       }, touch ? 'onTouchStart' : 'onMouseDown', mousedown), _react.default.createElement("div", {
         className: "r-panel-title"
-      }, header.title || ''), _react.default.createElement("div", {
+      }, title || ''), _react.default.createElement("div", {
         className: "r-panel-close",
-        onClick: this.close.bind(this)
+        onClick: close
       }));
     }
   }]);
@@ -672,6 +674,8 @@ var RPanelControl = /*#__PURE__*/function (_Component6) {
         return _react.default.createElement(RPanelList, {
           item: item
         });
+      } else {
+        return '';
       }
     }
   }]);
