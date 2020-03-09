@@ -139,7 +139,7 @@ export default class RPanel extends Component {
   render() {
     var {opened,model} = this.state;
     if(opened !== true){return '';}
-    var {backdrop,items,header,buttons = [],reset,style,backdropClose,rowStyle,activeColor,controlBackground,controlColor,textColor,background,headerStyle,backdropStyle,bodyStyle,footerStyle} = this.props;
+    var {backdrop,items,header,buttons = [],reset,style,backdropClose,rowStyle,activeColor,controlBackground,controlColor,textColor,background,headerStyle,backdropStyle,bodyStyle,footerStyle,activeReverseColor} = this.props;
     var contextValue = {
       close:this.close.bind(this),
       toggle:this.toggle.bind(this),
@@ -151,7 +151,7 @@ export default class RPanel extends Component {
       mousedown:this.mousedown.bind(this),
       getValue:this.getValue.bind(this),
       touch:this.touch,
-      activeColor,controlBackground,controlColor,textColor,background,
+      activeColor,controlBackground,controlColor,textColor,background,activeReverseColor,
       reset,buttons,items,model,rowStyle,headerStyle,bodyStyle,footerStyle
     }
     return (
@@ -166,7 +166,7 @@ export default class RPanel extends Component {
     );
   }
 }
-RPanel.defaultProps = {items:[],buttons:[],width:'300px',controlColor:'#fff',alignX:'center',controlBackground:'rgb(87, 92, 102)',activeColor:'rgb(255, 102, 0)',textColor:'#fff',background:'rgb(76, 82, 90)'}
+RPanel.defaultProps = {items:[],buttons:[],width:'300px',controlColor:'#fff',alignX:'center',activeReverseColor:'#fff',controlBackground:'rgb(87, 92, 102)',activeColor:'rgb(255, 102, 0)',textColor:'#fff',background:'rgb(76, 82, 90)'}
 
 
 class RPanelHeader extends Component{
@@ -393,7 +393,7 @@ class RPanelButtons extends Component{
   static contextType = RPanelContext;
   render(){
     var {item,value} = this.props;
-    var {controlBackground,controlColor,activeColor,onchange} = this.context;
+    var {controlBackground,activeReverseColor,controlColor,activeColor,onchange} = this.context;
     return (
       <div className="r-panel-control r-panel-group-button">
         {
@@ -403,7 +403,7 @@ class RPanelButtons extends Component{
               <button
                 style={{
                   background:active?activeColor:controlBackground,
-                  color:controlColor,
+                  color:active?activeReverseColor:controlColor,
                   width:btn.width,
                   flex:btn.width?'unset':1
                 }}

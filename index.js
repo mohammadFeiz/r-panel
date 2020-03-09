@@ -284,7 +284,8 @@ var RPanel = /*#__PURE__*/function (_Component) {
           headerStyle = _this$props.headerStyle,
           backdropStyle = _this$props.backdropStyle,
           bodyStyle = _this$props.bodyStyle,
-          footerStyle = _this$props.footerStyle;
+          footerStyle = _this$props.footerStyle,
+          activeReverseColor = _this$props.activeReverseColor;
       var contextValue = {
         close: this.close.bind(this),
         toggle: this.toggle.bind(this),
@@ -301,6 +302,7 @@ var RPanel = /*#__PURE__*/function (_Component) {
         controlColor: controlColor,
         textColor: textColor,
         background: background,
+        activeReverseColor: activeReverseColor,
         reset: reset,
         buttons: buttons,
         items: items,
@@ -386,6 +388,7 @@ RPanel.defaultProps = {
   width: '300px',
   controlColor: '#fff',
   alignX: 'center',
+  activeReverseColor: '#fff',
   controlBackground: 'rgb(87, 92, 102)',
   activeColor: 'rgb(255, 102, 0)',
   textColor: '#fff',
@@ -974,6 +977,7 @@ var RPanelButtons = /*#__PURE__*/function (_Component12) {
           value = _this$props8.value;
       var _this$context10 = this.context,
           controlBackground = _this$context10.controlBackground,
+          activeReverseColor = _this$context10.activeReverseColor,
           controlColor = _this$context10.controlColor,
           activeColor = _this$context10.activeColor,
           onchange = _this$context10.onchange;
@@ -984,7 +988,7 @@ var RPanelButtons = /*#__PURE__*/function (_Component12) {
         return _react.default.createElement("button", {
           style: {
             background: active ? activeColor : controlBackground,
-            color: controlColor,
+            color: active ? activeReverseColor : controlColor,
             width: btn.width,
             flex: btn.width ? 'unset' : 1
           },
