@@ -277,11 +277,14 @@ var RPanel = /*#__PURE__*/function (_Component) {
           backdropClose = _this$props.backdropClose,
           rowStyle = _this$props.rowStyle,
           activeColor = _this$props.activeColor,
+          controlBackground = _this$props.controlBackground,
           controlColor = _this$props.controlColor,
           textColor = _this$props.textColor,
           background = _this$props.background,
-          titleStyle = _this$props.titleStyle,
-          backdropStyle = _this$props.backdropStyle;
+          headerStyle = _this$props.headerStyle,
+          backdropStyle = _this$props.backdropStyle,
+          bodyStyle = _this$props.bodyStyle,
+          footerStyle = _this$props.footerStyle;
       var contextValue = {
         close: this.close.bind(this),
         toggle: this.toggle.bind(this),
@@ -294,6 +297,7 @@ var RPanel = /*#__PURE__*/function (_Component) {
         getValue: this.getValue.bind(this),
         touch: this.touch,
         activeColor: activeColor,
+        controlBackground: controlBackground,
         controlColor: controlColor,
         textColor: textColor,
         background: background,
@@ -302,7 +306,9 @@ var RPanel = /*#__PURE__*/function (_Component) {
         items: items,
         model: model,
         rowStyle: rowStyle,
-        titleStyle: titleStyle
+        headerStyle: headerStyle,
+        bodyStyle: bodyStyle,
+        footerStyle: footerStyle
       };
       return _react.default.createElement(RPanelContext.Provider, {
         value: contextValue
@@ -310,8 +316,7 @@ var RPanel = /*#__PURE__*/function (_Component) {
         className: 'r-panel',
         ref: this.dom,
         style: _jquery.default.extend({}, {
-          color: textColor,
-          background: background
+          color: textColor
         }, style)
       }, backdrop && _react.default.createElement("div", {
         style: backdropStyle,
@@ -379,8 +384,9 @@ RPanel.defaultProps = {
   items: [],
   buttons: [],
   width: '300px',
+  controlColor: '#fff',
   alignX: 'center',
-  controlColor: 'rgb(87, 92, 102)',
+  controlBackground: 'rgb(87, 92, 102)',
   activeColor: 'rgb(255, 102, 0)',
   textColor: '#fff',
   background: 'rgb(76, 82, 90)'
@@ -396,14 +402,25 @@ var RPanelHeader = /*#__PURE__*/function (_Component2) {
   }
 
   _createClass(RPanelHeader, [{
+    key: "getStyle",
+    value: function getStyle() {
+      var _this$context = this.context,
+          background = _this$context.background,
+          headerStyle = _this$context.headerStyle;
+      return _jquery.default.extend({}, {
+        background: background
+      }, headerStyle);
+    }
+  }, {
     key: "render",
     value: function render() {
-      var _this$context = this.context,
-          touch = _this$context.touch,
-          mousedown = _this$context.mousedown,
-          close = _this$context.close;
+      var _this$context2 = this.context,
+          touch = _this$context2.touch,
+          mousedown = _this$context2.mousedown,
+          close = _this$context2.close;
       var title = this.props.title;
       return _react.default.createElement("div", _defineProperty({
+        style: this.getStyle(),
         className: 'r-panel-header'
       }, touch ? 'onTouchStart' : 'onMouseDown', mousedown), _react.default.createElement("div", {
         className: "r-panel-title"
@@ -429,12 +446,22 @@ var RPanelBody = /*#__PURE__*/function (_Component3) {
   }
 
   _createClass(RPanelBody, [{
+    key: "getStyle",
+    value: function getStyle() {
+      var background = this.context.background;
+      return {
+        background: background
+      };
+    }
+  }, {
     key: "render",
     value: function render() {
       return _react.default.createElement("div", {
-        className: "r-panel-body"
+        className: "r-panel-body",
+        style: this.getStyle()
       }, _react.default.createElement("div", {
-        className: "r-panel-body-container"
+        className: "r-panel-body-container",
+        style: this.getStyle()
       }, this.props.items.map(function (item, i) {
         return _react.default.createElement(RPanelItem, {
           item: item,
@@ -447,6 +474,8 @@ var RPanelBody = /*#__PURE__*/function (_Component3) {
   return RPanelBody;
 }(_react.Component);
 
+_defineProperty(RPanelBody, "contextType", RPanelContext);
+
 var RPanelFooter = /*#__PURE__*/function (_Component4) {
   _inherits(RPanelFooter, _Component4);
 
@@ -457,13 +486,23 @@ var RPanelFooter = /*#__PURE__*/function (_Component4) {
   }
 
   _createClass(RPanelFooter, [{
+    key: "getStyle",
+    value: function getStyle() {
+      var _this$context3 = this.context,
+          background = _this$context3.background,
+          footerStyle = _this$context3.footerStyle;
+      return _jquery.default.extend({}, {
+        background: background
+      }, footerStyle);
+    }
+  }, {
     key: "render",
     value: function render() {
-      var _this$context2 = this.context,
-          resetCallback = _this$context2.resetCallback,
-          reset = _this$context2.reset,
-          buttons = _this$context2.buttons,
-          buttonClick = _this$context2.buttonClick;
+      var _this$context4 = this.context,
+          resetCallback = _this$context4.resetCallback,
+          reset = _this$context4.reset,
+          buttons = _this$context4.buttons,
+          buttonClick = _this$context4.buttonClick;
       var Buttons = [];
 
       if (reset) {
@@ -475,7 +514,8 @@ var RPanelFooter = /*#__PURE__*/function (_Component4) {
 
       Buttons = Buttons.concat(buttons);
       return _react.default.createElement("div", {
-        className: "r-panel-footer"
+        className: "r-panel-footer",
+        style: this.getStyle()
       }, Buttons.map(function (btn, i) {
         return _react.default.createElement("button", {
           key: i,
@@ -534,9 +574,9 @@ var RPanelItem = /*#__PURE__*/function (_Component5) {
   }, {
     key: "getItem",
     value: function getItem(item, value) {
-      var _this$context3 = this.context,
-          getValue = _this$context3.getValue,
-          validate = _this$context3.validate;
+      var _this$context5 = this.context,
+          getValue = _this$context5.getValue,
+          validate = _this$context5.validate;
       var validationState = validate(item, value);
       var itemProps = {
         className: 'r-panel-item',
@@ -566,9 +606,9 @@ var RPanelItem = /*#__PURE__*/function (_Component5) {
           level = _this$props3$level === void 0 ? 0 : _this$props3$level;
       var get = item.get;
       var field = typeof item.field === 'function' ? item.field() : item.field;
-      var _this$context4 = this.context,
-          getValueByField = _this$context4.getValueByField,
-          model = _this$context4.model;
+      var _this$context6 = this.context,
+          getValueByField = _this$context6.getValueByField,
+          model = _this$context6.model;
       var value = get ? get(getValueByField(model, field)) : getValueByField(model, field);
       return _react.default.createElement(_react.Fragment, null, item.group ? this.getGroup(item, level) : this.getItem(item, value));
     }
@@ -613,9 +653,9 @@ var RPanelControl = /*#__PURE__*/function (_Component6) {
       var _this$props4 = this.props,
           item = _this$props4.item,
           value = _this$props4.value;
-      var _this$context5 = this.context,
-          getValueByField = _this$context5.getValueByField,
-          model = _this$context5.model;
+      var _this$context7 = this.context,
+          getValueByField = _this$context7.getValueByField,
+          model = _this$context7.model;
 
       var type = _typeof(value);
 
@@ -827,12 +867,14 @@ var RPanelNumberbox = /*#__PURE__*/function (_Component10) {
       var _this$props6 = this.props,
           item = _this$props6.item,
           value = _this$props6.value;
-      var _this$context6 = this.context,
-          controlColor = _this$context6.controlColor,
-          onchange = _this$context6.onchange;
+      var _this$context8 = this.context,
+          controlBackground = _this$context8.controlBackground,
+          controlColor = _this$context8.controlColor,
+          onchange = _this$context8.onchange;
       return _react.default.createElement("input", _extends({}, item, {
         style: {
-          background: controlColor
+          background: controlBackground,
+          color: controlColor
         },
         type: "number",
         value: value,
@@ -861,10 +903,11 @@ var RPanelSlider = /*#__PURE__*/function (_Component11) {
   _createClass(RPanelSlider, [{
     key: "render",
     value: function render() {
-      var _this$context7 = this.context,
-          activeColor = _this$context7.activeColor,
-          controlColor = _this$context7.controlColor,
-          onchange = _this$context7.onchange;
+      var _this$context9 = this.context,
+          activeColor = _this$context9.activeColor,
+          controlBackground = _this$context9.controlBackground,
+          controlColor = _this$context9.controlColor,
+          onchange = _this$context9.onchange;
       var _this$props7 = this.props,
           value = _this$props7.value,
           item = _this$props7.item;
@@ -888,12 +931,13 @@ var RPanelSlider = /*#__PURE__*/function (_Component11) {
           top: '-10px',
           height: '20px',
           lineHeight: '20px',
-          background: controlColor,
+          color: controlColor,
+          background: controlBackground,
           minWidth: '20px',
           textAlign: 'center'
         },
         lineStyle: {
-          background: controlColor,
+          background: controlBackground,
           height: '3px'
         },
         start: item.range[0],
@@ -928,17 +972,19 @@ var RPanelButtons = /*#__PURE__*/function (_Component12) {
       var _this$props8 = this.props,
           item = _this$props8.item,
           value = _this$props8.value;
-      var _this$context8 = this.context,
-          controlColor = _this$context8.controlColor,
-          activeColor = _this$context8.activeColor,
-          onchange = _this$context8.onchange;
+      var _this$context10 = this.context,
+          controlBackground = _this$context10.controlBackground,
+          controlColor = _this$context10.controlColor,
+          activeColor = _this$context10.activeColor,
+          onchange = _this$context10.onchange;
       return _react.default.createElement("div", {
         className: "r-panel-control r-panel-group-button"
       }, item.buttons.map(function (btn, i) {
         var active = value === btn.value;
         return _react.default.createElement("button", {
           style: {
-            background: active ? activeColor : controlColor,
+            background: active ? activeColor : controlBackground,
+            color: controlColor,
             width: btn.width,
             flex: btn.width ? 'unset' : 1
           },
@@ -972,14 +1018,16 @@ var RPanelSelect = /*#__PURE__*/function (_Component13) {
       var _this$props9 = this.props,
           value = _this$props9.value,
           item = _this$props9.item;
-      var _this$context9 = this.context,
-          onchange = _this$context9.onchange,
-          controlColor = _this$context9.controlColor;
+      var _this$context11 = this.context,
+          onchange = _this$context11.onchange,
+          controlBackground = _this$context11.controlBackground,
+          controlColor = _this$context11.controlColor;
       return _react.default.createElement("select", {
         className: "r-panel-control r-panel-select",
         value: value,
         style: {
-          background: controlColor
+          color: controlColor,
+          background: controlBackground
         },
         onChange: function onChange(e) {
           onchange(item, e.target.value);
@@ -1013,9 +1061,10 @@ var RPanelColor = /*#__PURE__*/function (_Component14) {
       var _this$props10 = this.props,
           item = _this$props10.item,
           value = _this$props10.value;
-      var _this$context10 = this.context,
-          onchange = _this$context10.onchange,
-          controlColor = _this$context10.controlColor;
+      var _this$context12 = this.context,
+          onchange = _this$context12.onchange,
+          controlBackground = _this$context12.controlBackground,
+          controlColor = _this$context12.controlColor;
       return _react.default.createElement("input", {
         className: "r-panel-control r-panel-color",
         type: "color",
@@ -1024,7 +1073,8 @@ var RPanelColor = /*#__PURE__*/function (_Component14) {
         },
         value: value,
         style: {
-          background: controlColor
+          background: controlBackground,
+          color: controlColor
         }
       });
     }
@@ -1050,9 +1100,10 @@ var RPanelTextbox = /*#__PURE__*/function (_Component15) {
       var _this$props11 = this.props,
           value = _this$props11.value,
           item = _this$props11.item;
-      var _this$context11 = this.context,
-          controlColor = _this$context11.controlColor,
-          onchange = _this$context11.onchange;
+      var _this$context13 = this.context,
+          controlBackground = _this$context13.controlBackground,
+          controlColor = _this$context13.controlColor,
+          onchange = _this$context13.onchange;
       var listId = 'datalist' + Math.random();
       var list = item.list ? _react.default.createElement("datalist", {
         id: listId
@@ -1065,7 +1116,8 @@ var RPanelTextbox = /*#__PURE__*/function (_Component15) {
       return _react.default.createElement(_react.Fragment, null, _react.default.createElement("input", {
         list: listId,
         style: {
-          background: controlColor
+          background: controlBackground,
+          color: controlColor
         },
         disabled: item.disabled,
         maxLength: item.maxLength,
@@ -1099,15 +1151,16 @@ var RPanelCheckbox = /*#__PURE__*/function (_Component16) {
       var _this$props12 = this.props,
           item = _this$props12.item,
           value = _this$props12.value;
-      var _this$context12 = this.context,
-          onchange = _this$context12.onchange,
-          textColor = _this$context12.textColor,
-          activeColor = _this$context12.activeColor;
+      var _this$context14 = this.context,
+          onchange = _this$context14.onchange,
+          textColor = _this$context14.textColor,
+          activeColor = _this$context14.activeColor,
+          controlColor = _this$context14.controlColor;
       return _react.default.createElement("div", {
         className: "r-panel-control r-panel-checkbox"
       }, _react.default.createElement("div", {
         style: {
-          borderColor: textColor,
+          borderColor: controlColor,
           color: activeColor
         },
         className: "checkbox".concat(value === true ? ' checked' : ''),
