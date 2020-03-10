@@ -126,34 +126,24 @@ export default class RPanel extends Component {
     this.setValueByField(model,item.field,Value);
     if(onchange){onchange(model);}
     else{this.setState({model});}
-
   }
-  validate(item,value){
-    if(item.validation){
-      return item.validation(value) || {};
-    }
-  }
-  getValue(value){
-    return typeof value === 'function'?value(this.props):value;
-  }
+  validate(item,value){if(item.validation){return item.validation(value) || {};}}
+  getValue(value){return typeof value === 'function'?value(this.props):value;}
   render() {
     var {opened,model} = this.state;
     if(opened !== true){return '';}
-    var {backdrop,items,header,buttons = [],reset,style,backdropClose,rowStyle,activeColor,controlBackground,controlColor,textColor,background,headerStyle,backdropStyle,bodyStyle,footerStyle,activeReverseColor} = this.props;
-    var contextValue = {
-      close:this.close.bind(this),
-      toggle:this.toggle.bind(this),
-      buttonClick:this.buttonClick.bind(this),
-      resetCallback:this.resetCallback.bind(this),
-      getValueByField:this.getValueByField.bind(this),
-      onchange:this.onchange.bind(this),
-      validate:this.validate.bind(this),
-      mousedown:this.mousedown.bind(this),
-      getValue:this.getValue.bind(this),
-      touch:this.touch,
-      activeColor,controlBackground,controlColor,textColor,background,activeReverseColor,
-      reset,buttons,items,model,rowStyle,headerStyle,bodyStyle,footerStyle
-    }
+    var {backdrop,items,header,buttons = [],style,backdropClose,textColor,backdropStyle} = this.props;
+    var contextValue = {...this.props};
+    contextValue.close=this.close.bind(this);
+    contextValue.toggle=this.toggle.bind(this);
+    contextValue.buttonClick=this.buttonClick.bind(this);
+    contextValue.resetCallback=this.resetCallback.bind(this);
+    contextValue.getValueByField=this.getValueByField.bind(this);
+    contextValue.onchange=this.onchange.bind(this);
+    contextValue.validate=this.validate.bind(this);
+    contextValue.mousedown=this.mousedown.bind(this);
+    contextValue.getValue=this.getValue.bind(this);
+    contextValue.touch=this.touch;
     return (
       <RPanelContext.Provider value={contextValue}>
         <div className={'r-panel'} ref={this.dom} style={$.extend({},{color:textColor},style)}>
@@ -178,8 +168,11 @@ class RPanelHeader extends Component{
   render(){
     var {touch,mousedown,close} = this.context;
     var {title} = this.props;
+    var props = {
+      style:this.getStyle(),className:'r-panel-header',[touch?'onTouchStart':'onMouseDown']:mousedown
+    }
     return (
-      <div {...{style:this.getStyle(),className:'r-panel-header',[touch?'onTouchStart':'onMouseDown']:mousedown}}>
+      <div {...props}>
         <div className='r-panel-title'>{title || ''}</div>
         <div className='r-panel-close' onClick={close}></div>
       </div>
@@ -189,14 +182,11 @@ class RPanelHeader extends Component{
 
 class RPanelBody extends Component{
   static contextType = RPanelContext;
-  getStyle(){
-    var {background} = this.context;
-    return {background};
-  }
   render(){
+    var {background} = this.context;
     return (
-      <div className='r-panel-body' style={this.getStyle()}>
-        <div className='r-panel-body-container' style={this.getStyle()}>
+      <div className='r-panel-body' style={{background}}>
+        <div className='r-panel-body-container' style={{background}}>
           {this.props.items.map((item,i)=><RPanelItem item={item} key={i}/>)}
         </div>
       </div>
@@ -372,20 +362,18 @@ class RPanelSlider extends Component{
   render(){
     var {activeColor,controlBackground,controlColor,onchange} = this.context;
     var {value,item} = this.props;  
-    return (
-      <Slider
-        className='r-panel-control r-panel-slider'
-        style={{padding:'0 12px'}}
-        points={[{value,fillStyle:{background:activeColor,height:'3px'}}]}
-        pointStyle={{display:'none'}}
-        showValue='fixed'
-        valueStyle={{top:'-10px',height:'20px',lineHeight:'20px',color:controlColor,background:controlBackground,minWidth:'20px',textAlign:'center'}}
-        lineStyle={{background:controlBackground,height:'3px'}}
-        start={item.range[0]} end={item.range[1]} step={item.step}
-        min={item.min} max={item.max}
-        ondrag={(obj)=>{onchange(item,obj.points[0].value);}}
-      />
-    )
+    var props = {
+      className:'r-panel-control r-panel-slider',
+      style:{padding:'0 12px'},
+      points:[{value,fillStyle:{background:activeColor,height:'3px'}}],
+      pointStyle:{display:'none'},
+      showValue:'fixed',
+      valueStyle:{top:'-10px',height:'20px',lineHeight:'20px',color:controlColor,background:controlBackground,minWidth:'20px',textAlign:'center'},
+      lineStyle:{background:controlBackground,height:'3px'},
+      start:item.range[0],end:item.range[1],
+      [item.dragChange?'ondrag':'onchange']:(obj)=>{onchange(item,obj.points[0].value);}
+    }
+    return (<Slider {...item} {...props}/>)
   }
 }
 

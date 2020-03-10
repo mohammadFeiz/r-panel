@@ -272,46 +272,22 @@ var RPanel = /*#__PURE__*/function (_Component) {
           header = _this$props.header,
           _this$props$buttons = _this$props.buttons,
           buttons = _this$props$buttons === void 0 ? [] : _this$props$buttons,
-          reset = _this$props.reset,
           style = _this$props.style,
           backdropClose = _this$props.backdropClose,
-          rowStyle = _this$props.rowStyle,
-          activeColor = _this$props.activeColor,
-          controlBackground = _this$props.controlBackground,
-          controlColor = _this$props.controlColor,
           textColor = _this$props.textColor,
-          background = _this$props.background,
-          headerStyle = _this$props.headerStyle,
-          backdropStyle = _this$props.backdropStyle,
-          bodyStyle = _this$props.bodyStyle,
-          footerStyle = _this$props.footerStyle,
-          activeReverseColor = _this$props.activeReverseColor;
-      var contextValue = {
-        close: this.close.bind(this),
-        toggle: this.toggle.bind(this),
-        buttonClick: this.buttonClick.bind(this),
-        resetCallback: this.resetCallback.bind(this),
-        getValueByField: this.getValueByField.bind(this),
-        onchange: this.onchange.bind(this),
-        validate: this.validate.bind(this),
-        mousedown: this.mousedown.bind(this),
-        getValue: this.getValue.bind(this),
-        touch: this.touch,
-        activeColor: activeColor,
-        controlBackground: controlBackground,
-        controlColor: controlColor,
-        textColor: textColor,
-        background: background,
-        activeReverseColor: activeReverseColor,
-        reset: reset,
-        buttons: buttons,
-        items: items,
-        model: model,
-        rowStyle: rowStyle,
-        headerStyle: headerStyle,
-        bodyStyle: bodyStyle,
-        footerStyle: footerStyle
+          backdropStyle = _this$props.backdropStyle;
+      var contextValue = { ...this.props
       };
+      contextValue.close = this.close.bind(this);
+      contextValue.toggle = this.toggle.bind(this);
+      contextValue.buttonClick = this.buttonClick.bind(this);
+      contextValue.resetCallback = this.resetCallback.bind(this);
+      contextValue.getValueByField = this.getValueByField.bind(this);
+      contextValue.onchange = this.onchange.bind(this);
+      contextValue.validate = this.validate.bind(this);
+      contextValue.mousedown = this.mousedown.bind(this);
+      contextValue.getValue = this.getValue.bind(this);
+      contextValue.touch = this.touch;
       return _react.default.createElement(RPanelContext.Provider, {
         value: contextValue
       }, _react.default.createElement("div", {
@@ -422,10 +398,13 @@ var RPanelHeader = /*#__PURE__*/function (_Component2) {
           mousedown = _this$context2.mousedown,
           close = _this$context2.close;
       var title = this.props.title;
-      return _react.default.createElement("div", _defineProperty({
+
+      var props = _defineProperty({
         style: this.getStyle(),
         className: 'r-panel-header'
-      }, touch ? 'onTouchStart' : 'onMouseDown', mousedown), _react.default.createElement("div", {
+      }, touch ? 'onTouchStart' : 'onMouseDown', mousedown);
+
+      return _react.default.createElement("div", props, _react.default.createElement("div", {
         className: "r-panel-title"
       }, title || ''), _react.default.createElement("div", {
         className: "r-panel-close",
@@ -449,22 +428,19 @@ var RPanelBody = /*#__PURE__*/function (_Component3) {
   }
 
   _createClass(RPanelBody, [{
-    key: "getStyle",
-    value: function getStyle() {
-      var background = this.context.background;
-      return {
-        background: background
-      };
-    }
-  }, {
     key: "render",
     value: function render() {
+      var background = this.context.background;
       return _react.default.createElement("div", {
         className: "r-panel-body",
-        style: this.getStyle()
+        style: {
+          background: background
+        }
       }, _react.default.createElement("div", {
         className: "r-panel-body-container",
-        style: this.getStyle()
+        style: {
+          background: background
+        }
       }, this.props.items.map(function (item, i) {
         return _react.default.createElement(RPanelItem, {
           item: item,
@@ -914,8 +890,9 @@ var RPanelSlider = /*#__PURE__*/function (_Component11) {
       var _this$props7 = this.props,
           value = _this$props7.value,
           item = _this$props7.item;
-      return _react.default.createElement(_rRangeSlider.default, {
-        className: "r-panel-control r-panel-slider",
+
+      var props = _defineProperty({
+        className: 'r-panel-control r-panel-slider',
         style: {
           padding: '0 12px'
         },
@@ -929,7 +906,7 @@ var RPanelSlider = /*#__PURE__*/function (_Component11) {
         pointStyle: {
           display: 'none'
         },
-        showValue: "fixed",
+        showValue: 'fixed',
         valueStyle: {
           top: '-10px',
           height: '20px',
@@ -944,14 +921,12 @@ var RPanelSlider = /*#__PURE__*/function (_Component11) {
           height: '3px'
         },
         start: item.range[0],
-        end: item.range[1],
-        step: item.step,
-        min: item.min,
-        max: item.max,
-        ondrag: function ondrag(obj) {
-          onchange(item, obj.points[0].value);
-        }
+        end: item.range[1]
+      }, item.dragChange ? 'ondrag' : 'onchange', function (obj) {
+        onchange(item, obj.points[0].value);
       });
+
+      return _react.default.createElement(_rRangeSlider.default, _extends({}, item, props));
     }
   }]);
 
