@@ -47,6 +47,7 @@ export default class RPanel extends Component {
   }
   close(){
     this.setState({opened:false,prevModel:undefined,initModel:undefined});
+    this.props.closeCallback()
   }
   toggle(item){
       var {items} = this.props;

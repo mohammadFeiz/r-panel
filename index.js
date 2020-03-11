@@ -68,6 +68,7 @@ var RPanel = /*#__PURE__*/function (_Component) {
         prevModel: undefined,
         initModel: undefined
       });
+      this.props.closeCallback();
     }
   }, {
     key: "toggle",
