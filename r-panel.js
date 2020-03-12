@@ -157,7 +157,7 @@ export default class RPanel extends Component {
     );
   }
 }
-RPanel.defaultProps = {items:[],buttons:[],width:'300px',controlColor:'#fff',alignX:'center',activeReverseColor:'#fff',controlBackground:'rgb(87, 92, 102)',activeColor:'rgb(255, 102, 0)',textColor:'#fff',background:'rgb(76, 82, 90)',controlHeight:20}
+RPanel.defaultProps = {items:[],buttons:[],width:'300px',controlColor:'#fff',alignX:'center',activeReverseColor:'#fff',controlBackground:'rgb(87, 92, 102)',activeColor:'rgb(255, 102, 0)',textColor:'#fff',background:'rgb(76, 82, 90)',controlHeight:20,borderRadois:0}
 
 
 class RPanelHeader extends Component{
@@ -349,9 +349,9 @@ class RPanelNumberbox extends Component{
   static contextType = RPanelContext;
   render(){
     var {item,value} = this.props;
-    var {controlBackground,controlColor,onchange,controlHeight} = this.context;
+    var {controlBackground,controlColor,onchange,controlHeight,borderRadius} = this.context;
     return (
-      <input {...item} style={{background:controlBackground,color:controlColor,height:controlHeight}} type='number' value={value}
+      <input {...item} style={{borderRadius:borderRadius+'px',background:controlBackground,color:controlColor,height:controlHeight}} type='number' value={value}
         className='r-panel-control r-panel-textbox r-panel-numberbox'
         onChange={(e)=>{onchange(item,parseFloat(e.target.value));}}
     />
@@ -362,7 +362,7 @@ class RPanelNumberbox extends Component{
 class RPanelSlider extends Component{
   static contextType = RPanelContext;
   render(){
-    var {activeColor,controlBackground,controlColor,onchange,controlHeight} = this.context;
+    var {activeColor,controlBackground,controlColor,onchange,controlHeight,borderRadius} = this.context;
     var {value,item} = this.props;  
     var props = {
       className:'r-panel-control r-panel-slider',
@@ -370,7 +370,16 @@ class RPanelSlider extends Component{
       points:[{value,fillStyle:{background:activeColor,height:'3px'}}],
       pointStyle:{display:'none'},
       showValue:'fixed',
-      valueStyle:{top:(-controlHeight/2)+'px',height:controlHeight + 'px',lineHeight:controlHeight + 'px',color:controlColor,background:controlBackground,minWidth:'20px',textAlign:'center'},
+      valueStyle:{
+        top:(-controlHeight/2)+'px',
+        height:controlHeight + 'px',
+        lineHeight:controlHeight + 'px',
+        color:controlColor,
+        background:controlBackground,
+        minWidth:'20px',
+        textAlign:'center',
+        borderRadius:borderRadius + 'px'
+      },
       lineStyle:{background:controlBackground,height:'3px'},
       start:item.range[0],end:item.range[1],
       [item.dragChange?'ondrag':'onchange']:(obj)=>{onchange(item,obj.points[0].value);}
@@ -383,7 +392,7 @@ class RPanelButtons extends Component{
   static contextType = RPanelContext;
   render(){
     var {item,value} = this.props;
-    var {controlBackground,activeReverseColor,controlColor,activeColor,onchange,controlHeight} = this.context;
+    var {controlBackground,activeReverseColor,controlColor,activeColor,onchange,controlHeight,borderRadius} = this.context;
     return (
       <div className="r-panel-control r-panel-group-button">
         {
@@ -395,7 +404,11 @@ class RPanelButtons extends Component{
                   background:active?activeColor:controlBackground,
                   color:active?activeReverseColor:controlColor,
                   width:btn.width,height:controlHeight + 'px',
-                  flex:btn.width?'unset':1
+                  flex:btn.width?'unset':1,
+                  borderTopLeftRadius:i === 0?borderRadius:0,
+                  borderBottomLeftRadius:i === 0?borderRadius:0,
+                  borderTopRightRadius:i === item.buttons.length - 1?borderRadius:0,
+                  borderBottomRightRadius:i === item.buttons.length - 1?borderRadius:0,
                 }}
                 key={i} className={active?'active':undefined}
                 onClick={()=>{onchange(item,btn.value);}}
@@ -412,10 +425,10 @@ class RPanelSelect extends Component{
   static contextType = RPanelContext;
   render(){
     var {value,item} = this.props;
-    var {onchange,controlBackground,controlColor,controlHeight} = this.context;
+    var {onchange,controlBackground,controlColor,controlHeight,borderRadius} = this.context;
     return (
       <select
-          className='r-panel-control r-panel-select' value={value} style={{height:controlHeight + 'px',color:controlColor,background:controlBackground}}
+          className='r-panel-control r-panel-select' value={value} style={{borderRadius:borderRadius+'px',height:controlHeight + 'px',color:controlColor,background:controlBackground}}
           onChange={(e)=>{onchange(item,e.target.value)}
         }>
           {item.options.map((option,i)=><option key={i} value={option.value}>{option.text}</option>)}
@@ -428,14 +441,14 @@ class RPanelColor extends Component{
   static contextType = RPanelContext;
   render(){
     var {item,value} = this.props;
-    var {onchange,controlBackground,controlColor,controlHeight} = this.context;
+    var {onchange,controlBackground,controlColor,controlHeight,borderRadius} = this.context;
     return (
       <input 
         className='r-panel-control r-panel-color' 
         type='color' 
         onChange={(e)=>{onchange(item,e.target.value);}} 
         value={value} 
-        style={{background:controlBackground,color:controlColor,height:controlHeight + 'px'}}
+        style={{borderRadius:borderRadius+'px',background:controlBackground,color:controlColor,height:controlHeight + 'px'}}
       />
     );
   }
@@ -445,13 +458,13 @@ class RPanelTextbox extends Component{
   static contextType = RPanelContext;
   render(){
     var {value,item} = this.props;
-    var {controlBackground,controlColor,onchange,controlHeight} = this.context;
+    var {controlBackground,controlColor,onchange,controlHeight,borderRadius} = this.context;
     var listId = 'datalist' + Math.random();
     var list= item.list?<datalist id={listId}>{item.list.map((l,i)=><option value={l} key={i}/>)}</datalist>:undefined
     return (
       <Fragment>
         <input list={listId}
-          style={{background:controlBackground,color:controlColor,height:controlHeight + 'px'}} disabled={item.disabled} maxLength={item.maxLength} type='text'
+          style={{borderRadius:borderRadius+'px',background:controlBackground,color:controlColor,height:controlHeight + 'px'}} disabled={item.disabled} maxLength={item.maxLength} type='text'
           className='r-panel-control r-panel-textbox' 
           value={value}
           onChange={(e)=>{onchange(item,e.target.value);}}
@@ -500,3 +513,9 @@ class RPanelList extends Component{
     );
   }
 }
+
+
+
+
+
+

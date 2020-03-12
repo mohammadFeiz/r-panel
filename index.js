@@ -370,7 +370,8 @@ RPanel.defaultProps = {
   activeColor: 'rgb(255, 102, 0)',
   textColor: '#fff',
   background: 'rgb(76, 82, 90)',
-  controlHeight: 20
+  controlHeight: 20,
+  borderRadois: 0
 };
 
 var RPanelHeader = /*#__PURE__*/function (_Component2) {
@@ -858,9 +859,11 @@ var RPanelNumberbox = /*#__PURE__*/function (_Component10) {
           controlBackground = _this$context9.controlBackground,
           controlColor = _this$context9.controlColor,
           onchange = _this$context9.onchange,
-          controlHeight = _this$context9.controlHeight;
+          controlHeight = _this$context9.controlHeight,
+          borderRadius = _this$context9.borderRadius;
       return _react.default.createElement("input", _extends({}, item, {
         style: {
+          borderRadius: borderRadius + 'px',
           background: controlBackground,
           color: controlColor,
           height: controlHeight
@@ -897,7 +900,8 @@ var RPanelSlider = /*#__PURE__*/function (_Component11) {
           controlBackground = _this$context10.controlBackground,
           controlColor = _this$context10.controlColor,
           onchange = _this$context10.onchange,
-          controlHeight = _this$context10.controlHeight;
+          controlHeight = _this$context10.controlHeight,
+          borderRadius = _this$context10.borderRadius;
       var _this$props7 = this.props,
           value = _this$props7.value,
           item = _this$props7.item;
@@ -926,7 +930,8 @@ var RPanelSlider = /*#__PURE__*/function (_Component11) {
           color: controlColor,
           background: controlBackground,
           minWidth: '20px',
-          textAlign: 'center'
+          textAlign: 'center',
+          borderRadius: borderRadius + 'px'
         },
         lineStyle: {
           background: controlBackground,
@@ -968,7 +973,8 @@ var RPanelButtons = /*#__PURE__*/function (_Component12) {
           controlColor = _this$context11.controlColor,
           activeColor = _this$context11.activeColor,
           onchange = _this$context11.onchange,
-          controlHeight = _this$context11.controlHeight;
+          controlHeight = _this$context11.controlHeight,
+          borderRadius = _this$context11.borderRadius;
       return _react.default.createElement("div", {
         className: "r-panel-control r-panel-group-button"
       }, item.buttons.map(function (btn, i) {
@@ -979,7 +985,11 @@ var RPanelButtons = /*#__PURE__*/function (_Component12) {
             color: active ? activeReverseColor : controlColor,
             width: btn.width,
             height: controlHeight + 'px',
-            flex: btn.width ? 'unset' : 1
+            flex: btn.width ? 'unset' : 1,
+            borderTopLeftRadius: i === 0 ? borderRadius : 0,
+            borderBottomLeftRadius: i === 0 ? borderRadius : 0,
+            borderTopRightRadius: i === item.buttons.length - 1 ? borderRadius : 0,
+            borderBottomRightRadius: i === item.buttons.length - 1 ? borderRadius : 0
           },
           key: i,
           className: active ? 'active' : undefined,
@@ -1015,11 +1025,13 @@ var RPanelSelect = /*#__PURE__*/function (_Component13) {
           onchange = _this$context12.onchange,
           controlBackground = _this$context12.controlBackground,
           controlColor = _this$context12.controlColor,
-          controlHeight = _this$context12.controlHeight;
+          controlHeight = _this$context12.controlHeight,
+          borderRadius = _this$context12.borderRadius;
       return _react.default.createElement("select", {
         className: "r-panel-control r-panel-select",
         value: value,
         style: {
+          borderRadius: borderRadius + 'px',
           height: controlHeight + 'px',
           color: controlColor,
           background: controlBackground
@@ -1060,7 +1072,8 @@ var RPanelColor = /*#__PURE__*/function (_Component14) {
           onchange = _this$context13.onchange,
           controlBackground = _this$context13.controlBackground,
           controlColor = _this$context13.controlColor,
-          controlHeight = _this$context13.controlHeight;
+          controlHeight = _this$context13.controlHeight,
+          borderRadius = _this$context13.borderRadius;
       return _react.default.createElement("input", {
         className: "r-panel-control r-panel-color",
         type: "color",
@@ -1069,6 +1082,7 @@ var RPanelColor = /*#__PURE__*/function (_Component14) {
         },
         value: value,
         style: {
+          borderRadius: borderRadius + 'px',
           background: controlBackground,
           color: controlColor,
           height: controlHeight + 'px'
@@ -1101,7 +1115,8 @@ var RPanelTextbox = /*#__PURE__*/function (_Component15) {
           controlBackground = _this$context14.controlBackground,
           controlColor = _this$context14.controlColor,
           onchange = _this$context14.onchange,
-          controlHeight = _this$context14.controlHeight;
+          controlHeight = _this$context14.controlHeight,
+          borderRadius = _this$context14.borderRadius;
       var listId = 'datalist' + Math.random();
       var list = item.list ? _react.default.createElement("datalist", {
         id: listId
@@ -1114,6 +1129,7 @@ var RPanelTextbox = /*#__PURE__*/function (_Component15) {
       return _react.default.createElement(_react.Fragment, null, _react.default.createElement("input", {
         list: listId,
         style: {
+          borderRadius: borderRadius + 'px',
           background: controlBackground,
           color: controlColor,
           height: controlHeight + 'px'
