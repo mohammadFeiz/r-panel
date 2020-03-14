@@ -235,7 +235,7 @@ var RPanel = /*#__PURE__*/function (_Component) {
       this.setValueByField(model, item.field, Value);
 
       if (onchange) {
-        onchange(model);
+        onchange(model,item.field);
       } else {
         this.setState({
           model: model

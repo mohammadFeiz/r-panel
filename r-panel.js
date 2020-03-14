@@ -125,7 +125,7 @@ export default class RPanel extends Component {
     model = JSON.parse(JSON.stringify(model));
     var Value = item.set?item.set(value):value;
     this.setValueByField(model,item.field,Value);
-    if(onchange){onchange(model);}
+    if(onchange){onchange(model,item.field);}
     else{this.setState({model});}
   }
   validate(item,value){if(item.validation){return item.validation(value) || {};}}
