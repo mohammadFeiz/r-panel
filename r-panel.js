@@ -133,7 +133,7 @@ export default class RPanel extends Component {
   render() {
     var {opened,model} = this.state;
     if(opened !== true){return '';}
-    var {backdrop,items,header,buttons = [],style,backdropClose,textColor,backdropStyle} = this.props;
+    var {backdrop,items,header,buttons = [],style,backdropClose,textColor,backdropStyle,className} = this.props;
     var contextValue = {...this.props};
     contextValue.close=this.close.bind(this);
     contextValue.toggle=this.toggle.bind(this);
@@ -147,7 +147,7 @@ export default class RPanel extends Component {
     contextValue.touch=this.touch;
     return (
       <RPanelContext.Provider value={contextValue}>
-        <div className={'r-panel'} ref={this.dom} style={$.extend({},{color:textColor},style)}>
+        <div className={`r-panel${className?' ' + className:''}`} ref={this.dom} style={$.extend({},{color:textColor},style)}>
           {backdrop && <div style={backdropStyle} className='r-panel-backdrop' onClick={()=>{if(backdropClose){this.close()}}}></div>}
           {header && <RPanelHeader title={header.title || ''}/>}
           {<RPanelBody items={items}/>}
